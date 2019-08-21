@@ -38,7 +38,7 @@ import kotlin.jvm.functions.Function1;
 import static android.content.ContentValues.TAG;
 
 public class EstimoNotificationsManager {
-    public static final String TAG = "EstimoNotificationsManager";
+    public static final String TAG = "EstimoNotifications";
 
     private static Context context;
     private NotificationManager notificationManager;
@@ -179,6 +179,7 @@ public class EstimoNotificationsManager {
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconEnterDetail(proximityContext.getDeviceId());
                         readAttachmentsAndShowNotifications(proximityContext,notifIcon,mute,classRef,receiver,flag);
+                        sendAddUserRequest();
                         return null;
                     }
                 })
@@ -511,7 +512,7 @@ public class EstimoNotificationsManager {
         });
     }
 
-    private void addUser(){
+    private void sendAddUserRequest(){
         mPropertyController.addUser(mUserName,"Android",getFCMToken(),mAppName, mIMEINumber,
                 new ICallbackHandler<AddUserResponse>() {
                     @Override
