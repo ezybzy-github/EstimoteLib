@@ -12,12 +12,18 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.estimote.proximity_sdk.api.ProximityObserver;
 import com.estimote.proximity_sdk.api.ProximityObserverBuilder;
 import com.estimote.proximity_sdk.api.ProximityZone;
 import com.estimote.proximity_sdk.api.ProximityZoneBuilder;
 import com.estimote.proximity_sdk.api.ProximityZoneContext;
+import com.estimotelib.controller.PropertyController;
+import com.estimotelib.interfaces.ICallbackHandler;
+import com.estimotelib.model.AddUserResponse;
+import com.estimotelib.model.PropertyExitResponse;
+import com.estimotelib.model.PropertyVisitResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,16 +35,25 @@ import java.util.Map;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+import static android.content.ContentValues.TAG;
+
 public class EstimoNotificationsManager {
-    private Context context;
+    public static final String TAG = "EstimoNotificationsManager";
+
+    private static Context context;
     private NotificationManager notificationManager;
     private OnBeaconMessageListener mBeaconMessageListener;
 
-    String key,value;
+    private String key,value;
+
+    private String mAppName,mIMEINumber,mUserName;
+
+    private PropertyController mPropertyController;
 
     public EstimoNotificationsManager(Context mContext) {
         this.context = mContext;
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mPropertyController = new PropertyController(mContext);
     }
 
     public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
@@ -136,6 +151,8 @@ public class EstimoNotificationsManager {
                 }else{
                     notificationManager.notify(notification_id, entryNotification.build());
                 }
+
+                sendPropertyEntryRequest(value);
             }
         }
     }
@@ -169,11 +186,26 @@ public class EstimoNotificationsManager {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconExitDetail(proximityContext.getDeviceId());
+                        readAttachment(proximityContext);
                         return null;
                     }
                 })
                 .build();
         proximityObserver.startObserving(zone);
+    }
+
+    private void readAttachment(ProximityZoneContext proximityContext) {
+        Map<String, String> attachments = proximityContext.getAttachments();
+
+        Map.Entry<String,String> entry = attachments.entrySet().iterator().next();
+        String value = entry.getValue();
+
+        sendExitPropertyRequest(value);
+
+        /*for(Map.Entry<String, String> attachment: attachments.entrySet()) {
+            value = attachment.getValue();
+            sendExitPropertyRequest(value);
+        }*/
     }
 
 
@@ -415,5 +447,81 @@ public class EstimoNotificationsManager {
 
     public SharedPreferences getPreference(String name){
         return context.getSharedPreferences(name,Context.MODE_PRIVATE);
+    }
+
+    public void getUserName(String userName){
+        mUserName = userName;
+    }
+
+    public void getAppNameIMEINumber(String appName,String imeinumber){
+        mAppName = appName;
+        mIMEINumber = imeinumber;
+    }
+
+    public static void saveFCMToken(String token){
+        SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN",Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString("TOKEN",token);
+        spe.commit();
+    }
+
+    private String getFCMToken(){
+        SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN",Context.MODE_PRIVATE);
+        return sp.getString("TOKEN","");
+    }
+
+    private void saveUserId(String UserId){
+        SharedPreferences sp = context.getSharedPreferences("USER_ID",Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString("UserId",UserId);
+        spe.commit();
+    }
+
+    private String getUserId(){
+        SharedPreferences sp = context.getSharedPreferences("USER_ID",Context.MODE_PRIVATE);
+        return sp.getString("UserId","");
+    }
+
+    private void sendPropertyEntryRequest(String url){
+        mPropertyController.visitProperty(getFCMToken(), url, mAppName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
+            @Override
+            public void response(PropertyVisitResponse response) {
+                saveUserId(response.getUserId());
+            }
+
+            @Override
+            public void isError(String errorMsg) {
+
+            }
+        });
+    }
+
+    private void sendExitPropertyRequest(String url){
+        mPropertyController.exitProperty(getUserId(),url,getFCMToken(), mAppName, mIMEINumber,
+                new ICallbackHandler<PropertyExitResponse>() {
+            @Override
+            public void response(PropertyExitResponse response) {
+                Log.e(TAG,"MSG: "+response.getMessage());
+            }
+
+            @Override
+            public void isError(String errorMsg) {
+
+            }
+        });
+    }
+
+    private void addUser(){
+        mPropertyController.addUser(mUserName,"Android",getFCMToken(),mAppName, mIMEINumber,
+                new ICallbackHandler<AddUserResponse>() {
+                    @Override
+                    public void response(AddUserResponse response) {
+                    }
+
+                    @Override
+                    public void isError(String errorMsg) {
+
+                    }
+                });
     }
 }
