@@ -21,7 +21,7 @@ public class PropertyVisitResponse {
     @Expose
     private Integer id;
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 

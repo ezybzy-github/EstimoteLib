@@ -487,7 +487,7 @@ public class EstimoNotificationsManager {
         mPropertyController.visitProperty(getFCMToken(), url, mAppName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
-                saveUserId(response.getUserId());
+                saveUserId(String.valueOf(response.getUserId()));
             }
 
             @Override
