@@ -24,6 +24,7 @@ import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.PropertyExitResponse;
 import com.estimotelib.model.PropertyVisitResponse;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -488,6 +489,7 @@ public class EstimoNotificationsManager {
             @Override
             public void response(PropertyVisitResponse response) {
                 saveUserId(String.valueOf(response.getUserId()));
+                Log.e(TAG,"PROPERTY_ENTRY: "+new Gson().toJson(response));
             }
 
             @Override
@@ -502,7 +504,7 @@ public class EstimoNotificationsManager {
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
             public void response(PropertyExitResponse response) {
-                Log.e(TAG,"MSG: "+response.getMessage());
+                Log.e(TAG,"PROPERTY_EXIT: "+response.getMessage());
             }
 
             @Override
@@ -517,6 +519,7 @@ public class EstimoNotificationsManager {
                 new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
+                        Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
                     }
 
                     @Override
