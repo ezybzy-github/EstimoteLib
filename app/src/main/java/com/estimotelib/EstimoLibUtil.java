@@ -7,6 +7,7 @@ import android.util.Log;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
+import com.estimotelib.interfaces.NotificationListener;
 
 import java.util.List;
 
@@ -22,7 +23,11 @@ public class EstimoLibUtil {
     private EstimoNotificationsManager mNm;
     private boolean mIsMonitoringOn = false;
 
-    Context mContext;
+    private Context mContext;
+
+    public static NotificationListener mListener;
+
+    private static int mNotificationIcon;
 
     public EstimoLibUtil(String appId, String appToken, Context applicationContext) {
 
@@ -36,12 +41,17 @@ public class EstimoLibUtil {
 
     }
 
+    public static int notificationIcon(){
+        return mNotificationIcon;
+    }
+
     public void enableBeaconsNotification(int notifIcon, final int mute, final Class classRef, final Class receiver,boolean flag) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
             mNm = new EstimoNotificationsManager(mContext);
             mNm.startMonitoring(notifIcon,mute,classRef,receiver,flag);
+            mNotificationIcon = notifIcon;
         }
     }
 
@@ -84,5 +94,9 @@ public class EstimoLibUtil {
                             }
                         });
 
+    }
+
+    public static void bindListener(NotificationListener listener) {
+        mListener = listener;
     }
 }
