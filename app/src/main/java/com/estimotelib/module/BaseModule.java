@@ -74,7 +74,7 @@ public abstract class BaseModule implements API {
                 if (response.isSuccessful()) {
                     final String processedResponse = readResponse(response.body());
                     if (processedResponse != null) {
-//                        Log.e("processedResponse", processedResponse);
+                        Log.e("processedResponse", processedResponse);
                         onSuccessResponse(processedResponse);
                     }
                 } else {

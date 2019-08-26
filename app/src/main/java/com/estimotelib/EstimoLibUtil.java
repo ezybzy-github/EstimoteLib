@@ -52,7 +52,6 @@ public class EstimoLibUtil {
             mNm = new EstimoNotificationsManager(mContext);
             mNm.startMonitoring(notifIcon,mute,classRef,receiver,flag);
             mNotificationIcon = notifIcon;
-            mNm.sendAddUserRequest();
         }
     }
 

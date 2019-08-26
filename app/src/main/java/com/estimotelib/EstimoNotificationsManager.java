@@ -514,6 +514,11 @@ public class EstimoNotificationsManager {
     }
 
     public void sendAddUserRequest(){
+        Log.e(TAG,"mUserName: "+mUserName);
+        Log.e(TAG,"getFCMToken(): "+getFCMToken());
+        Log.e(TAG,"mAppName: "+mAppName);
+        Log.e(TAG,"mIMEINumber: "+mIMEINumber);
+
         mPropertyController.addUser(mUserName,"Android",getFCMToken(),mAppName, mIMEINumber,
                 new ICallbackHandler<AddUserResponse>() {
                     @Override
