@@ -45,12 +45,13 @@ public class EstimoLibUtil {
         return mNotificationIcon;
     }
 
-    public void enableBeaconsNotification(int notifIcon, final int mute, final Class classRef, final Class receiver,boolean flag) {
+    public void enableBeaconsNotification(int notifIcon, final int mute, final Class classRef, final Class receiver,boolean flag,
+                                          String appName) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
             mNm = new EstimoNotificationsManager(mContext);
-            mNm.startMonitoring(notifIcon,mute,classRef,receiver,flag);
+            mNm.startMonitoring(notifIcon,mute,classRef,receiver,flag,appName);
             mNotificationIcon = notifIcon;
         }
     }
@@ -67,7 +68,8 @@ public class EstimoLibUtil {
         }
     }
 
-    public void startMonitoring(Activity context, final int notifIcon, final int muteIcon, final Class classRef, final Class receiver, final boolean flag) {
+    public void startMonitoring(Activity context, final int notifIcon, final int muteIcon, final Class classRef,
+                                final Class receiver, final boolean flag,final String appName) {
         RequirementsWizardFactory
                 .createEstimoteRequirementsWizard()
                 .fulfillRequirements(context,
@@ -75,7 +77,7 @@ public class EstimoLibUtil {
                             @Override
                             public Unit invoke() {
                                 Log.d("app", "requirements fulfilled");
-                                enableBeaconsNotification(notifIcon,muteIcon,classRef,receiver,flag);
+                                enableBeaconsNotification(notifIcon,muteIcon,classRef,receiver,flag,appName);
                                 return null;
                             }
                         },

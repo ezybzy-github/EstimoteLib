@@ -47,7 +47,7 @@ public class EstimoNotificationsManager {
 
     private String key,value;
 
-    private String mAppName,mIMEINumber,mUserName;
+    private String mIMEINumber;
 
     private PropertyController mPropertyController;
 
@@ -114,8 +114,8 @@ public class EstimoNotificationsManager {
         return builder;
     }
 
-    private void readAttachmentsAndShowNotifications(final ProximityZoneContext proximityZoneContext,int notifIcon,int mute,
-                                                     Class refClass,Class receiver,boolean flag) {
+    private void readAttachmentsAndShowNotifications(final ProximityZoneContext proximityZoneContext, int notifIcon, int mute,
+                                                     Class refClass, Class receiver, boolean flag, String appName) {
         final String beaconId = proximityZoneContext.getDeviceId();
 
         if(isBeaconNotificationReceivedInTwelveHours(beaconId)) {
@@ -153,12 +153,13 @@ public class EstimoNotificationsManager {
                     notificationManager.notify(notification_id, entryNotification.build());
                 }
 
-                sendPropertyEntryRequest(value);
+                sendPropertyEntryRequest(value,appName);
             }
         }
     }
 
-    public void startMonitoring(final int notifIcon, final int mute, final Class classRef, final Class receiver, final boolean flag) {
+    public void startMonitoring(final int notifIcon, final int mute, final Class classRef, final Class receiver, final boolean flag,
+                                final String appName) {
         EstimoLibUtil util = new EstimoLibUtil();
         ProximityObserver proximityObserver =
                 new ProximityObserverBuilder(context, util.cloudCredentials)
@@ -179,7 +180,7 @@ public class EstimoNotificationsManager {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconEnterDetail(proximityContext.getDeviceId());
-                        readAttachmentsAndShowNotifications(proximityContext,notifIcon,mute,classRef,receiver,flag);
+                        readAttachmentsAndShowNotifications(proximityContext,notifIcon,mute,classRef,receiver,flag,appName);
                         return null;
                     }
                 })
@@ -187,7 +188,7 @@ public class EstimoNotificationsManager {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconExitDetail(proximityContext.getDeviceId());
-                        readAttachment(proximityContext);
+                        readAttachment(proximityContext,appName);
                         return null;
                     }
                 })
@@ -195,13 +196,13 @@ public class EstimoNotificationsManager {
         proximityObserver.startObserving(zone);
     }
 
-    private void readAttachment(ProximityZoneContext proximityContext) {
+    private void readAttachment(ProximityZoneContext proximityContext,String appName) {
         Map<String, String> attachments = proximityContext.getAttachments();
 
         Map.Entry<String,String> entry = attachments.entrySet().iterator().next();
         String value = entry.getValue();
 
-        sendExitPropertyRequest(value);
+        sendExitPropertyRequest(value,appName);
 
         /*for(Map.Entry<String, String> attachment: attachments.entrySet()) {
             value = attachment.getValue();
@@ -450,12 +451,7 @@ public class EstimoNotificationsManager {
         return context.getSharedPreferences(name,Context.MODE_PRIVATE);
     }
 
-    public void getUserName(String userName){
-        mUserName = userName;
-    }
-
-    public void getAppNameIMEINumber(String appName,String imeinumber){
-        mAppName = appName;
+    public void getAppNameIMEINumber(String imeinumber){
         mIMEINumber = imeinumber;
     }
 
@@ -483,8 +479,8 @@ public class EstimoNotificationsManager {
         return sp.getString("UserId","");
     }
 
-    private void sendPropertyEntryRequest(String url){
-        mPropertyController.visitProperty(getFCMToken(), url, mAppName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
+    private void sendPropertyEntryRequest(String url,String appName){
+        mPropertyController.visitProperty(getFCMToken(), url, appName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
                 saveUserId(String.valueOf(response.getUserId()));
@@ -498,8 +494,8 @@ public class EstimoNotificationsManager {
         });
     }
 
-    private void sendExitPropertyRequest(String url){
-        mPropertyController.exitProperty(getUserId(),url,getFCMToken(), mAppName, mIMEINumber,
+    private void sendExitPropertyRequest(String url,String appName){
+        mPropertyController.exitProperty(getUserId(),url,getFCMToken(), appName, mIMEINumber,
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
             public void response(PropertyExitResponse response) {
@@ -513,13 +509,13 @@ public class EstimoNotificationsManager {
         });
     }
 
-    public void sendAddUserRequest(){
-        Log.e(TAG,"mUserName: "+mUserName);
+    public void sendAddUserRequest(String userName,String appName){
+        Log.e(TAG,"mUserName: "+userName);
         Log.e(TAG,"getFCMToken(): "+getFCMToken());
-        Log.e(TAG,"mAppName: "+mAppName);
+        Log.e(TAG,"mAppName: "+appName);
         Log.e(TAG,"mIMEINumber: "+mIMEINumber);
 
-        mPropertyController.addUser(mUserName,"Android",getFCMToken(),mAppName, mIMEINumber,
+        mPropertyController.addUser(userName,"Android",getFCMToken(),appName, mIMEINumber,
                 new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
