@@ -180,7 +180,6 @@ public class EstimoNotificationsManager {
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconEnterDetail(proximityContext.getDeviceId());
                         readAttachmentsAndShowNotifications(proximityContext,notifIcon,mute,classRef,receiver,flag);
-                        sendAddUserRequest();
                         return null;
                     }
                 })
@@ -514,7 +513,7 @@ public class EstimoNotificationsManager {
         });
     }
 
-    private void sendAddUserRequest(){
+    public void sendAddUserRequest(){
         mPropertyController.addUser(mUserName,"Android",getFCMToken(),mAppName, mIMEINumber,
                 new ICallbackHandler<AddUserResponse>() {
                     @Override
