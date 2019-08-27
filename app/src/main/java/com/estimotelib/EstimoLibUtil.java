@@ -41,9 +41,9 @@ public class EstimoLibUtil {
 
     }
 
-    public static int notificationIcon(){
+    /*public static int notificationIcon(){
         return mNotificationIcon;
-    }
+    }*/
 
     public void enableBeaconsNotification(int notifIcon, final int mute, final Class classRef, final Class receiver,boolean flag,
                                           String appName) {

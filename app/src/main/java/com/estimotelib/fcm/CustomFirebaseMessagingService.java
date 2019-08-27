@@ -134,7 +134,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"content_channel");
 
-        builder.setSmallIcon(EstimoLibUtil.notificationIcon())
+        builder.setSmallIcon(android.R.drawable.ic_popup_reminder)
                 .setContentTitle(title)
                 .setContentText(msg)
                 .setContentIntent(pendingIntent)
