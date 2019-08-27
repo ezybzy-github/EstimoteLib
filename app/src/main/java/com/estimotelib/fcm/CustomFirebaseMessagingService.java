@@ -50,9 +50,9 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
 
-    NotificationManager notificationManager;
+    static NotificationManager notificationManager;
 
-    final int NOTIFY_ID = 0; // ID of notification;
+    static final int NOTIFY_ID = 0; // ID of notification;
 
     @Override
     public void onCreate()
@@ -103,7 +103,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         }
     }
 
-    private void CreateNotificationChannel(){
+    private static void CreateNotificationChannel(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
@@ -148,7 +148,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         notificationManager.notify(NOTIFY_ID, notification);
     }
 
-    public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
+    public static class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
         private Context mContext;
         private String title, message, imageUrl,appName,url;
