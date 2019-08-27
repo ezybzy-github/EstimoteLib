@@ -77,12 +77,14 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         String url = data.optString("url");
         String title  = data.optString("title");
         String message   = data.optString("message");
-        String apName   = data.optString("app_name");
+        String appName   = data.optString("app_name");
 
-        handleDataMessage(title,Image,url,message,apName);
+        createNotification(title,getApplicationContext(),message,Image,url,appName);
+
+//        handleDataMessage(title,Image,url,message,apName);
     }
 
-    private void handleDataMessage(String title, String Image, String url, String message, String apName) {
+    /*private void handleDataMessage(String title, String Image, String url, String message, String apName) {
 
         try {
             Intent intent = new Intent();
@@ -93,15 +95,17 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         } catch (Exception e) {
             Log.e(TAG, "Exception: " + e.getMessage());
         }
-    }
+    }*/
 
-    public void createNotification(String title, Context context, String msg, Intent intent, String image) {
+    public void createNotification(String title, Context context, String msg, String image, String url, String appName) {
 
         final int NOTIFY_ID = 0; // ID of notification
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT < 26) {
+            return;
+        }else {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
 
@@ -113,6 +117,9 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
             notificationManager.createNotificationChannel(contentChannel);
         }
 
+        Intent intent = new Intent();
+        intent.putExtra("url", url);
+        intent.setAction(appName);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFY_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
