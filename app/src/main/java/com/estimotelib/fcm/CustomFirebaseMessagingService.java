@@ -99,6 +99,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
         final int NOTIFY_ID = 0; // ID of notification
 
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
