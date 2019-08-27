@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BaseTarget;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.transition.Transition;
 import com.estimotelib.EstimoLibUtil;
@@ -139,7 +140,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
-        if(!image.equalsIgnoreCase("null")) {
+       /* if(!image.equalsIgnoreCase("null")) {
             Glide.with(context)
                     .asBitmap()
                     .load(image)
@@ -159,109 +160,10 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
                         }
                     });
-        }
+        }*/
 
         Notification notification = builder.build();
         notificationManager.notify(NOTIFY_ID, notification);
-
-
-
-//        String id = "my_channel_001"; // default_channel_id
-//        CharSequence name = getApplicationContext().getString(R.string.app_name);
-//        String description = getApplicationContext().getString(R.string.app_name);
-//
-//        PendingIntent pendingIntent;
-//        final NotificationCompat.Builder builder;
-//        if (notifManager == null) {
-//            notifManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        }
-//
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//        stackBuilder.addNextIntentWithParentStack(intent);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            int importance = NotificationManager.IMPORTANCE_HIGH;
-//            NotificationChannel mChannel = notifManager.getNotificationChannel(id);
-//            if (mChannel == null) {
-//                mChannel = new NotificationChannel(id, name, importance);
-//                mChannel.setDescription(description);
-//                mChannel.enableVibration(true);
-//                mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-//                notifManager.createNotificationChannel(mChannel);
-//            }
-//            builder = new NotificationCompat.Builder(context, id);
-//
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//            builder.setContentTitle(title)                            // required
-//                    .setSmallIcon(EstimoLibUtil.notificationIcon())   // required
-//                    .setContentText(msg) // required
-//                    .setDefaults(Notification.DEFAULT_ALL)
-//                    .setAutoCancel(true)
-//                    .setContentIntent(pendingIntent)
-//                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-//
-//            if(!image.equalsIgnoreCase("NULL")){
-//                Glide.with(context)
-//                        .asBitmap()
-//                        .load(image)
-//                        .into(new BaseTarget<Bitmap>() {
-//                            @Override
-//                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                                builder.setLargeIcon(resource);
-//                            }
-//
-//                            @Override
-//                            public void getSize(@NonNull SizeReadyCallback cb) {
-//
-//                            }
-//
-//                            @Override
-//                            public void removeCallback(@NonNull SizeReadyCallback cb) {
-//
-//                            }
-//                        });
-//            }
-//        }
-//        else {
-//            builder = new NotificationCompat.Builder(context, id);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-////            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-//            builder.setContentTitle(title)                            // required
-//                    .setSmallIcon(EstimoLibUtil.notificationIcon())   // required
-//                    .setContentText(msg) // required
-//                    .setDefaults(Notification.DEFAULT_ALL)
-//                    .setAutoCancel(true)
-//                    .setContentIntent(pendingIntent)
-//                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-//                    .setPriority(Notification.PRIORITY_HIGH);
-//
-//            if(!image.equalsIgnoreCase("NULL")){
-//                Glide.with(context)
-//                        .asBitmap()
-//                        .load(image)
-//                        .into(new BaseTarget<Bitmap>() {
-//                            @Override
-//                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                                builder.setLargeIcon(resource);
-//                            }
-//
-//                            @Override
-//                            public void getSize(@NonNull SizeReadyCallback cb) {
-//
-//                            }
-//
-//                            @Override
-//                            public void removeCallback(@NonNull SizeReadyCallback cb) {
-//
-//                            }
-//                        });
-//            }
-//        }
-//
-//        Notification notification = builder.build();
-//        notifManager.notify(NOTIFY_ID, notification);
     }
 
 
