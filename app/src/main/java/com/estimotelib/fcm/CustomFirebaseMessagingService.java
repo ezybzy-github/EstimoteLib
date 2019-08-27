@@ -42,16 +42,13 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
 
-    private LocalBroadcastManager broadcaster;
-
-    private NotificationManager notificationManager;
+    NotificationManager notificationManager;
 
     @Override
     public void onCreate()
     {
         // TODO Auto-generated method stub
         super.onCreate();
-        broadcaster = LocalBroadcastManager.getInstance(this);
     }
 
     @Override
@@ -80,6 +77,12 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         String message   = data.optString("message");
         String appName   = data.optString("app_name");
 
+        Log.e(TAG,"Image: "+Image);
+        Log.e(TAG,"url: "+url);
+        Log.e(TAG,"title: "+title);
+        Log.e(TAG,"message: "+message);
+        Log.e(TAG,"appName: "+appName);
+
         createNotification(title,getApplicationContext(),message,Image,url,appName);
 
 //        handleDataMessage(title,Image,url,message,apName);
@@ -104,9 +107,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT < 26) {
-            return;
-        }else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
 
@@ -116,6 +117,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             contentChannel.setSound(alarmSound, attributes);
             notificationManager.createNotificationChannel(contentChannel);
+        } else {
+            return;
         }
 
         Intent intent = new Intent();
