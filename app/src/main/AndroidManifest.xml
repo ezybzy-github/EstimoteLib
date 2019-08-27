@@ -6,7 +6,7 @@
     <application android:label="@string/app_name">
         <service
             android:name="com.estimotelib.fcm.CustomFirebaseMessagingService"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
