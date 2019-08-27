@@ -1,5 +1,6 @@
 package com.estimotelib.fcm;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,11 +10,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +38,11 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +51,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
     private static final String TAG = "FirebaseMessageService";
 
     NotificationManager notificationManager;
+
+    final int NOTIFY_ID = 0; // ID of notification;
 
     @Override
     public void onCreate()
@@ -57,6 +67,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
         if (remoteMessage == null)
             return;
+
+        notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Check if message contains a data payload.
         Map<String, String> data = remoteMessage.getData();
@@ -83,30 +95,15 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"message: "+message);
         Log.e(TAG,"appName: "+appName);
 
-        createNotification(title,getApplicationContext(),message,Image,url,appName);
-
-//        handleDataMessage(title,Image,url,message,apName);
+        if(!Image.equalsIgnoreCase("")){
+            new generatePictureStyleNotification(getApplicationContext(),title, message,
+                    Image,appName,url).execute();
+        }else {
+            createNotification(title,getApplicationContext(),message,Image,url,appName);
+        }
     }
 
-    /*private void handleDataMessage(String title, String Image, String url, String message, String apName) {
-
-        try {
-            Intent intent = new Intent();
-            intent.putExtra("url", url);
-            intent.setAction(apName);
-
-            createNotification(title,getApplicationContext(),message,intent,Image);
-        } catch (Exception e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
-        }
-    }*/
-
-    public void createNotification(String title, Context context, String msg, String image, String url, String appName) {
-
-        final int NOTIFY_ID = 0; // ID of notification
-
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+    private void CreateNotificationChannel(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
@@ -120,6 +117,11 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         } else {
             return;
         }
+    }
+
+    public void createNotification(String title, Context context, String msg, String image, String url, String appName) {
+
+        CreateNotificationChannel();
 
         Intent intent = new Intent();
         intent.putExtra("url", url);
@@ -142,34 +144,77 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
                 .setDefaults(defaults)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-
-       /* if(!image.equalsIgnoreCase("null")) {
-            Glide.with(context)
-                    .asBitmap()
-                    .load(image)
-                    .into(new BaseTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            builder.setLargeIcon(resource);
-                        }
-
-                        @Override
-                        public void getSize(@NonNull SizeReadyCallback cb) {
-
-                        }
-
-                        @Override
-                        public void removeCallback(@NonNull SizeReadyCallback cb) {
-
-                        }
-                    });
-        }*/
-
         Notification notification = builder.build();
         notificationManager.notify(NOTIFY_ID, notification);
     }
 
+    public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
+        private Context mContext;
+        private String title, message, imageUrl,appName,url;
+
+        public generatePictureStyleNotification(Context context, String title, String message, String imageUrl,String appName,String url) {
+            super();
+            this.mContext = context;
+            this.title = title;
+            this.message = message;
+            this.imageUrl = imageUrl;
+            this.appName = appName;
+            this.url = url;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+
+            InputStream in;
+            try {
+                URL url = new URL(this.imageUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                in = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(in);
+                return myBitmap;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+
+            CreateNotificationChannel();
+
+            int defaults = 0;
+            defaults = defaults | Notification.DEFAULT_LIGHTS;
+            defaults = defaults | Notification.DEFAULT_VIBRATE;
+            defaults = defaults | Notification.DEFAULT_SOUND;
+
+            Intent intent = new Intent();
+            intent.putExtra("url", url);
+            intent.setAction(appName);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, NOTIFY_ID, intent, PendingIntent.FLAG_ONE_SHOT);
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notif = new Notification.Builder(mContext)
+                    .setContentIntent(pendingIntent)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setDefaults(defaults)
+                    .setSmallIcon(android.R.drawable.ic_popup_reminder)
+                    .setLargeIcon(result)
+                    .setStyle(new Notification.BigPictureStyle().bigPicture(result))
+                    .build();
+            notif.flags |= Notification.FLAG_AUTO_CANCEL;
+            notificationManager.notify(NOTIFY_ID, notif);
+        }
+    }
 
     public static boolean isAppIsInBackground(Context context) {
         boolean isInBackground = true;
