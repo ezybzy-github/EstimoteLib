@@ -68,7 +68,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
     private void processNotification(JSONObject data)
     {
-        String Image = data.optString("Image");
+        String Image = data.optString("image");
         String url = data.optString("url");
         String title  = data.optString("title");
         String message   = data.optString("message");
