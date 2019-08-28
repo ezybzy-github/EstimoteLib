@@ -66,7 +66,7 @@ public class EstimoNotificationsManager {
     }
 
     public NotificationCompat.Builder buildNotification(final String title, String key, final String value, int notification_id,
-                                                        int notifIcon, int mute, Class refClass, Class receiver, boolean flag) {
+                                                        Class refClass, Class receiver, boolean flag) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
@@ -101,9 +101,9 @@ public class EstimoNotificationsManager {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"content_channel");
 
         if(flag){
-            builder.addAction(mute,"Mute",pendingIntentMute);
+            builder.addAction(R.drawable.ic_mute,"Mute",pendingIntentMute);
         }
-        builder.setSmallIcon(notifIcon)
+        builder.setSmallIcon(android.R.drawable.ic_popup_reminder)
                 .setContentTitle(title)
                 .setContentText(value)
                 .setContentIntent(pendingIntent)
@@ -114,8 +114,8 @@ public class EstimoNotificationsManager {
         return builder;
     }
 
-    private void readAttachmentsAndShowNotifications(final ProximityZoneContext proximityZoneContext, int notifIcon, int mute,
-                                                     Class refClass, Class receiver, boolean flag, String appName) {
+    private void readAttachmentsAndShowNotifications(final ProximityZoneContext proximityZoneContext, Class refClass,
+                                                     Class receiver, boolean flag, String appName) {
         final String beaconId = proximityZoneContext.getDeviceId();
 
         if(isBeaconNotificationReceivedInTwelveHours(beaconId)) {
@@ -145,7 +145,7 @@ public class EstimoNotificationsManager {
 
             if(!isPropertyVisited) {
                 NotificationCompat.Builder entryNotification = buildNotification(key,
-                        key, value, notification_id,notifIcon,mute,refClass,receiver,flag);
+                        key, value, notification_id,refClass,receiver,flag);
 
                 if(notification_id == 1 && mBeaconMessageListener != null) {
                     mBeaconMessageListener.onMessageReceived(key, value);
@@ -158,7 +158,7 @@ public class EstimoNotificationsManager {
         }
     }
 
-    public void startMonitoring(final int notifIcon, final int mute, final Class classRef, final Class receiver, final boolean flag,
+    public void startMonitoring(final Class classRef, final Class receiver, final boolean flag,
                                 final String appName) {
         EstimoLibUtil util = new EstimoLibUtil();
         ProximityObserver proximityObserver =
@@ -180,7 +180,7 @@ public class EstimoNotificationsManager {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconEnterDetail(proximityContext.getDeviceId());
-                        readAttachmentsAndShowNotifications(proximityContext,notifIcon,mute,classRef,receiver,flag,appName);
+                        readAttachmentsAndShowNotifications(proximityContext,classRef,receiver,flag,appName);
                         return null;
                     }
                 })
