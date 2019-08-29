@@ -84,51 +84,66 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
             new generatePictureStyleNotification(getApplicationContext(),title, message,
                     Image,appName,url).execute();
         }else {
-            createNotification(title,getApplicationContext(),message,Image,url,appName);
+            createNotification(title,getApplicationContext(),message,url,appName);
         }
     }
 
-    private static void CreateNotificationChannel(){
+    public void createNotification(String title, Context context, String msg, String url, String appName) {
+
+        final int NOTIFY_ID = 0; // ID of notification
+        PendingIntent pendingIntent;
+        NotificationCompat.Builder builder;
+        if (notificationManager == null) {
+            notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel contentChannel = new NotificationChannel(
-                    "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
 
-            AudioAttributes attributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                    .build();
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            contentChannel.setSound(alarmSound, attributes);
-            notificationManager.createNotificationChannel(contentChannel);
-        } else {
-            return;
+            NotificationChannel mChannel = notificationManager.getNotificationChannel("content_channel");
+            if (mChannel == null) {
+                mChannel = new NotificationChannel("content_channel", "Things near you", importance);
+                mChannel.enableVibration(true);
+                mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                notificationManager.createNotificationChannel(mChannel);
+            }
+            builder = new NotificationCompat.Builder(context, "content_channel");
+
+            Intent intent = new Intent();
+            intent.putExtra("url", url);
+            intent.setAction(appName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+            builder.setContentTitle(appName)                            // required
+                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                    .setContentText(msg) // required
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setTicker(title)
+                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         }
-    }
+        else {
+            builder = new NotificationCompat.Builder(context, "content_channel");
 
-    public void createNotification(String title, Context context, String msg, String image, String url, String appName) {
+            Intent intent = new Intent();
+            intent.putExtra("url", url);
+            intent.setAction(appName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        CreateNotificationChannel();
+            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        Intent intent = new Intent();
-        intent.putExtra("url", url);
-        intent.setAction(appName);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFY_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        int defaults = 0;
-        defaults = defaults | Notification.DEFAULT_LIGHTS;
-        defaults = defaults | Notification.DEFAULT_VIBRATE;
-        defaults = defaults | Notification.DEFAULT_SOUND;
-
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"content_channel");
-
-        builder.setSmallIcon(android.R.drawable.ic_popup_reminder)
-                .setContentTitle(title)
-                .setContentText(msg)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setDefaults(defaults)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-
+            builder.setContentTitle(appName)                            // required
+                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                    .setContentText(msg) // required
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setTicker(title)
+                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                    .setPriority(Notification.PRIORITY_HIGH);
+        }
         Notification notification = builder.build();
         notificationManager.notify(NOTIFY_ID, notification);
     }
@@ -173,7 +188,69 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
 
-            CreateNotificationChannel();
+            final int NOTIFY_ID = 0; // ID of notification
+            PendingIntent pendingIntent;
+            NotificationCompat.Builder builder;
+            if (notificationManager == null) {
+                notificationManager = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+
+                NotificationChannel mChannel = notificationManager.getNotificationChannel("content_channel");
+                if (mChannel == null) {
+                    mChannel = new NotificationChannel("content_channel", "Things near you", importance);
+                    mChannel.enableVibration(true);
+                    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    notificationManager.createNotificationChannel(mChannel);
+                }
+                builder = new NotificationCompat.Builder(mContext, "content_channel");
+
+                Intent intent = new Intent();
+                intent.putExtra("url", url);
+                intent.setAction(appName);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+
+                builder.setContentTitle(appName)                            // required
+                        .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                        .setContentText(message) // required
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setTicker(title)
+                        .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                        .setLargeIcon(result)
+                        .setStyle(new NotificationCompat.BigPictureStyle());
+            }
+            else {
+                builder = new NotificationCompat.Builder(mContext, "content_channel");
+
+                Intent intent = new Intent();
+                intent.putExtra("url", url);
+                intent.setAction(appName);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+
+                builder.setContentTitle(appName)                            // required
+                        .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                        .setContentText(message) // required
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setTicker(title)
+                        .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setLargeIcon(result)
+                        .setStyle(new NotificationCompat.BigPictureStyle());
+            }
+            Notification notification = builder.build();
+            notificationManager.notify(NOTIFY_ID, notification);
+
+
+           /* CreateNotificationChannel();
 
             int defaults = 0;
             defaults = defaults | Notification.DEFAULT_LIGHTS;
@@ -197,7 +274,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
                     .setStyle(new Notification.BigPictureStyle().bigPicture(result))
                     .build();
             notif.flags |= Notification.FLAG_AUTO_CANCEL;
-            notificationManager.notify(NOTIFY_ID, notif);
+            notificationManager.notify(NOTIFY_ID, notif);*/
         }
     }
 
