@@ -222,7 +222,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
                         .setTicker(title)
                         .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                         .setLargeIcon(result)
-                        .setStyle(new NotificationCompat.BigPictureStyle());
+                        .setStyle(new NotificationCompat.BigPictureStyle()
+                                .bigPicture(result));
             }
             else {
                 builder = new NotificationCompat.Builder(mContext, "content_channel");
