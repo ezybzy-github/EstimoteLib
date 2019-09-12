@@ -462,7 +462,7 @@ public class EstimoNotificationsManager {
         spe.commit();
     }
 
-    private String getFCMToken(){
+    public String getFCMToken(){
         SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN",Context.MODE_PRIVATE);
         return sp.getString("TOKEN","");
     }
