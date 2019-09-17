@@ -11,18 +11,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.AudioAttributes;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -36,8 +31,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
     private static final String TAG = "FirebaseMessageService";
 
     static NotificationManager notificationManager;
-
-    static final int NOTIFY_ID = 0; // ID of notification;
 
     @Override
     public void onCreate()
@@ -250,33 +243,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
             }
             Notification notification = builder.build();
             notificationManager.notify(NOTIFY_ID, notification);
-
-
-           /* CreateNotificationChannel();
-
-            int defaults = 0;
-            defaults = defaults | Notification.DEFAULT_LIGHTS;
-            defaults = defaults | Notification.DEFAULT_VIBRATE;
-            defaults = defaults | Notification.DEFAULT_SOUND;
-
-            Intent intent = new Intent();
-            intent.putExtra("url", url);
-            intent.setAction(appName);
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, NOTIFY_ID, intent, PendingIntent.FLAG_ONE_SHOT);
-
-            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            Notification notif = new Notification.Builder(mContext)
-                    .setContentIntent(pendingIntent)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setDefaults(defaults)
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)
-                    .setLargeIcon(result)
-                    .setStyle(new Notification.BigPictureStyle().bigPicture(result))
-                    .build();
-            notif.flags |= Notification.FLAG_AUTO_CANCEL;
-            notificationManager.notify(NOTIFY_ID, notif);*/
         }
     }
 

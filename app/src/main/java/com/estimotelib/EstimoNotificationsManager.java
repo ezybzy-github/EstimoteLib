@@ -12,8 +12,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.estimote.proximity_sdk.api.ProximityObserver;
 import com.estimote.proximity_sdk.api.ProximityObserverBuilder;
 import com.estimote.proximity_sdk.api.ProximityZone;
@@ -24,19 +22,17 @@ import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.PropertyExitResponse;
 import com.estimotelib.model.PropertyVisitResponse;
+import com.estimotelib.receiver.ActionButtonReceiver;
 import com.google.gson.Gson;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-import static android.content.ContentValues.TAG;
 
 public class EstimoNotificationsManager {
     public static final String TAG = "EstimoNotifications";
@@ -66,7 +62,7 @@ public class EstimoNotificationsManager {
     }
 
     public NotificationCompat.Builder buildNotification(final String title, String key, final String value, int notification_id,
-                                                        Class refClass, Class receiver, boolean flag) {
+                                                        Class refClass, boolean flag) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
@@ -87,7 +83,7 @@ public class EstimoNotificationsManager {
 
 
         //Pending intent for mute action
-        Intent muteIntent = new Intent(context,receiver);
+        Intent muteIntent = new Intent(context, ActionButtonReceiver.class);
         muteIntent.putExtra("url",value);
         muteIntent.putExtra("notification_id", notification_id);
         muteIntent.setAction("YES_MUTE");
@@ -115,7 +111,7 @@ public class EstimoNotificationsManager {
     }
 
     private void readAttachmentsAndShowNotifications(final ProximityZoneContext proximityZoneContext, Class refClass,
-                                                     Class receiver, boolean flag, String appName) {
+                                                     boolean flag, String appName) {
         final String beaconId = proximityZoneContext.getDeviceId();
 
         if(isBeaconNotificationReceivedInTwelveHours(beaconId)) {
@@ -145,7 +141,7 @@ public class EstimoNotificationsManager {
 
             if(!isPropertyVisited) {
                 NotificationCompat.Builder entryNotification = buildNotification(key,
-                        key, value, notification_id,refClass,receiver,flag);
+                        key, value, notification_id,refClass,flag);
 
                 if(notification_id == 1 && mBeaconMessageListener != null) {
                     mBeaconMessageListener.onMessageReceived(key, value);
@@ -158,8 +154,7 @@ public class EstimoNotificationsManager {
         }
     }
 
-    public void startMonitoring(final Class classRef, final Class receiver, final boolean flag,
-                                final String appName) {
+    public void startMonitoring(final Class classRef, final boolean flag,final String appName) {
         EstimoLibUtil util = new EstimoLibUtil();
         ProximityObserver proximityObserver =
                 new ProximityObserverBuilder(context, util.cloudCredentials)
@@ -180,7 +175,7 @@ public class EstimoNotificationsManager {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         saveBeaconEnterDetail(proximityContext.getDeviceId());
-                        readAttachmentsAndShowNotifications(proximityContext,classRef,receiver,flag,appName);
+                        readAttachmentsAndShowNotifications(proximityContext,classRef,flag,appName);
                         return null;
                     }
                 })
@@ -203,11 +198,6 @@ public class EstimoNotificationsManager {
         String value = entry.getValue();
 
         sendExitPropertyRequest(value,appName);
-
-        /*for(Map.Entry<String, String> attachment: attachments.entrySet()) {
-            value = attachment.getValue();
-            sendExitPropertyRequest(value);
-        }*/
     }
 
 
