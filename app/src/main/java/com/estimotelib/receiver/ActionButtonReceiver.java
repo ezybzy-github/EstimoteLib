@@ -20,7 +20,7 @@ public class ActionButtonReceiver extends BroadcastReceiver {
             String url = intent.getStringExtra("url");
 
             mNm = new EstimoNotificationsManager(context);
-            mNm.storeMutedUrl(url);
+            mNm.storeMutedUrl(context,url);
 
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);

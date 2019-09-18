@@ -14,6 +14,6 @@ public class CustomFirebaseInstanceIDService extends FirebaseInstanceIdService
     public void onTokenRefresh() {
         String firebaseId = FirebaseInstanceId.getInstance().getToken();
         Log.e(TAG,"FIREBASE_ID: "+firebaseId);
-        EstimoNotificationsManager.saveFCMToken(firebaseId);
+        EstimoNotificationsManager.saveFCMToken(this,firebaseId);
     }
 }

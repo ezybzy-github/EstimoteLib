@@ -18,12 +18,10 @@ import kotlin.jvm.functions.Function1;
 public class EstimoLibUtil {
     private static String TAG = "EstimoLibUtil";
 
-    EstimoteCloudCredentials cloudCredentials;
+    public static EstimoteCloudCredentials cloudCredentials;
 
     private EstimoNotificationsManager mNm;
     private boolean mIsMonitoringOn = false;
-
-    private Context mContext;
 
     public static NotificationListener mListener;
 
@@ -32,7 +30,6 @@ public class EstimoLibUtil {
 
         Log.e(TAG,"ID: "+appId);
         Log.e(TAG,"TOKEN: "+appToken);
-        mContext = applicationContext;
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
     }
 
@@ -40,12 +37,12 @@ public class EstimoLibUtil {
 
     }
 
-    public void enableBeaconsNotification(final Class classRef, boolean flag,String appName) {
+    public void enableBeaconsNotification(Activity mContext,final Class classRef, boolean flag,String appName) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
             mNm = new EstimoNotificationsManager(mContext);
-            mNm.startMonitoring(classRef,flag,appName);
+            mNm.startMonitoring(mContext,classRef,flag,appName);
         }
     }
 
@@ -61,8 +58,8 @@ public class EstimoLibUtil {
         }
     }
 
-    public void startMonitoring(Activity context,final Class classRef,
-                                final boolean flag,final String appName) {
+    public void startMonitoring(final Activity context, final Class classRef,
+                                final boolean flag, final String appName) {
         RequirementsWizardFactory
                 .createEstimoteRequirementsWizard()
                 .fulfillRequirements(context,
@@ -70,7 +67,7 @@ public class EstimoLibUtil {
                             @Override
                             public Unit invoke() {
                                 Log.d("app", "requirements fulfilled");
-                                enableBeaconsNotification(classRef,flag,appName);
+                                enableBeaconsNotification(context,classRef,flag,appName);
                                 return null;
                             }
                         },

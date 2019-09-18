@@ -1,5 +1,6 @@
 package com.estimotelib;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -37,7 +38,6 @@ import kotlin.jvm.functions.Function1;
 public class EstimoNotificationsManager {
     public static final String TAG = "EstimoNotifications";
 
-    private static Context context;
     private NotificationManager notificationManager;
     private OnBeaconMessageListener mBeaconMessageListener;
 
@@ -48,8 +48,7 @@ public class EstimoNotificationsManager {
     private PropertyController mPropertyController;
 
     public EstimoNotificationsManager(Context mContext) {
-        this.context = mContext;
-        this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        this.notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(mContext);
     }
 
@@ -61,8 +60,8 @@ public class EstimoNotificationsManager {
         this.mBeaconMessageListener = null;
     }
 
-    public NotificationCompat.Builder buildNotification(final String title, String key, final String value, int notification_id,
-                                                        Class refClass, boolean flag) {
+    public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value, int notification_id,
+                                                        Class classRef, boolean flag) throws ClassNotFoundException {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel contentChannel = new NotificationChannel(
                     "content_channel", "Things near you", NotificationManager.IMPORTANCE_HIGH);
@@ -75,26 +74,26 @@ public class EstimoNotificationsManager {
             notificationManager.createNotificationChannel(contentChannel);
         }
 
-        Intent webViewIntent = new Intent(context,refClass);
+        Intent webViewIntent = new Intent(mContext,classRef);
         webViewIntent.putExtra("WEB_VIEW_URL", value);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, notification_id,
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notification_id,
                 webViewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         //Pending intent for mute action
-        Intent muteIntent = new Intent(context, ActionButtonReceiver.class);
+        Intent muteIntent = new Intent(mContext, ActionButtonReceiver.class);
         muteIntent.putExtra("url",value);
         muteIntent.putExtra("notification_id", notification_id);
         muteIntent.setAction("YES_MUTE");
-        PendingIntent pendingIntentMute = PendingIntent.getBroadcast(context, notification_id, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentMute = PendingIntent.getBroadcast(mContext, notification_id, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         int defaults = 0;
         defaults = defaults | Notification.DEFAULT_LIGHTS;
         defaults = defaults | Notification.DEFAULT_VIBRATE;
         defaults = defaults | Notification.DEFAULT_SOUND;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"content_channel");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext,"content_channel");
 
         if(flag){
             builder.addAction(R.drawable.ic_mute,"Mute",pendingIntentMute);
@@ -110,15 +109,15 @@ public class EstimoNotificationsManager {
         return builder;
     }
 
-    private void readAttachmentsAndShowNotifications(final ProximityZoneContext proximityZoneContext, Class refClass,
-                                                     boolean flag, String appName) {
+    private void readAttachmentsAndShowNotifications(Activity mContext,final ProximityZoneContext proximityZoneContext,
+                                                     Class classRef,boolean flag, String appName) throws ClassNotFoundException {
         final String beaconId = proximityZoneContext.getDeviceId();
 
-        if(isBeaconNotificationReceivedInTwelveHours(beaconId)) {
+        if(isBeaconNotificationReceivedInTwelveHours(mContext,beaconId)) {
             return;
         }
 
-        visitedBeacon(beaconId);
+        visitedBeacon(mContext,beaconId);
 
         Map<String, String> attachments = proximityZoneContext.getAttachments();
         int notification_id = 0;
@@ -131,17 +130,17 @@ public class EstimoNotificationsManager {
             // Decide if the property is visited
             // if property is visited was 30 days ago, if yes we need to consider that property
             boolean isPropertyVisited = false;
-            if(matchKeyFromMuteMap(value)) {
+            if(matchKeyFromMuteMap(mContext,value)) {
                 isPropertyVisited = true;
 
-                if(checkDate(value)) {
+                if(checkDate(mContext,value)) {
                     isPropertyVisited = false;
                 }
             }
 
             if(!isPropertyVisited) {
-                NotificationCompat.Builder entryNotification = buildNotification(key,
-                        key, value, notification_id,refClass,flag);
+                NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
+                        value, notification_id,classRef,flag);
 
                 if(notification_id == 1 && mBeaconMessageListener != null) {
                     mBeaconMessageListener.onMessageReceived(key, value);
@@ -149,15 +148,14 @@ public class EstimoNotificationsManager {
                     notificationManager.notify(notification_id, entryNotification.build());
                 }
 
-                sendPropertyEntryRequest(value,appName);
+                sendPropertyEntryRequest(mContext,value,appName);
             }
         }
     }
 
-    public void startMonitoring(final Class classRef, final boolean flag,final String appName) {
-        EstimoLibUtil util = new EstimoLibUtil();
+    public void startMonitoring(final Activity mContext, final Class classRef, final boolean flag, final String appName) {
         ProximityObserver proximityObserver =
-                new ProximityObserverBuilder(context, util.cloudCredentials)
+                new ProximityObserverBuilder(mContext, EstimoLibUtil.cloudCredentials)
                         .onError(new Function1<Throwable, Unit>() {
                             @Override
                             public Unit invoke(Throwable throwable) {
@@ -174,16 +172,20 @@ public class EstimoNotificationsManager {
                 .onEnter(new Function1<ProximityZoneContext, Unit>() {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
-                        saveBeaconEnterDetail(proximityContext.getDeviceId());
-                        readAttachmentsAndShowNotifications(proximityContext,classRef,flag,appName);
+                        saveBeaconEnterDetail(mContext,proximityContext.getDeviceId());
+                        try {
+                            readAttachmentsAndShowNotifications(mContext,proximityContext,classRef,flag,appName);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         return null;
                     }
                 })
                 .onExit(new Function1<ProximityZoneContext, Unit>() {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
-                        saveBeaconExitDetail(proximityContext.getDeviceId());
-                        readAttachment(proximityContext,appName);
+                        saveBeaconExitDetail(mContext,proximityContext.getDeviceId());
+                        readAttachment(mContext,proximityContext,appName);
                         return null;
                     }
                 })
@@ -191,13 +193,13 @@ public class EstimoNotificationsManager {
         proximityObserver.startObserving(zone);
     }
 
-    private void readAttachment(ProximityZoneContext proximityContext,String appName) {
+    private void readAttachment(Context context,ProximityZoneContext proximityContext,String appName) {
         Map<String, String> attachments = proximityContext.getAttachments();
 
         Map.Entry<String,String> entry = attachments.entrySet().iterator().next();
         String value = entry.getValue();
 
-        sendExitPropertyRequest(value,appName);
+        sendExitPropertyRequest(context,value,appName);
     }
 
 
@@ -209,7 +211,7 @@ public class EstimoNotificationsManager {
     }
 
     //user mute any notification then store here
-    public void storeMutedUrl(String url)
+    public void storeMutedUrl(Context context, String url)
     {
         try
         {
@@ -234,7 +236,7 @@ public class EstimoNotificationsManager {
     }
 
     //Get muted urls
-    public boolean matchKeyFromMuteMap(String value)
+    public boolean matchKeyFromMuteMap(Context context, String value)
     {
         boolean urlMatch = false;
         SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS",Context.MODE_PRIVATE);
@@ -248,7 +250,7 @@ public class EstimoNotificationsManager {
     }
 
     //Delete from preference
-    public void deleteFromMutedUrl(String value){
+    public void deleteFromMutedUrl(Context context, String value){
         SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS",Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -269,7 +271,7 @@ public class EstimoNotificationsManager {
     }
 
     //user mute specific url then notification should not be come before 30 days
-    public boolean checkDate(String value)
+    public boolean checkDate(Context context, String value)
     {
         boolean dateMatch = false;
 
@@ -315,7 +317,7 @@ public class EstimoNotificationsManager {
     }
 
     //store beacon id if user visit first time
-    public void visitedBeacon(String beaconId)
+    public void visitedBeacon(Context context, String beaconId)
     {
         try
         {
@@ -342,7 +344,7 @@ public class EstimoNotificationsManager {
         }
     }
 
-    public boolean isBeaconNotificationReceivedInTwelveHours(final String beaconId) {
+    public boolean isBeaconNotificationReceivedInTwelveHours(Context context, final String beaconId) {
         try {
             SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON",Context.MODE_PRIVATE);
             HashMap<String, String> map= getMap(pref);
@@ -369,7 +371,7 @@ public class EstimoNotificationsManager {
     }
 
     //Delete from preference
-    public void deleteFromVisitedBeacon(String value){
+    public void deleteFromVisitedBeacon(Context context, String value){
         SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON",Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -399,7 +401,7 @@ public class EstimoNotificationsManager {
         return formattedTime;
     }
 
-    public void saveBeaconEnterDetail(String deviceId){
+    public void saveBeaconEnterDetail(Context context, String deviceId){
         SharedPreferences pref= context.getSharedPreferences("ENTERED_BEACON",Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -418,7 +420,7 @@ public class EstimoNotificationsManager {
         editor.commit();
     }
 
-    public void saveBeaconExitDetail(String deviceId){
+    public void saveBeaconExitDetail(Context context,String deviceId){
         SharedPreferences pref= context.getSharedPreferences("EXIT_BEACON",Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -437,7 +439,7 @@ public class EstimoNotificationsManager {
         editor.commit();
     }
 
-    public SharedPreferences getPreference(String name){
+    public SharedPreferences getPreference(Context context, String name){
         return context.getSharedPreferences(name,Context.MODE_PRIVATE);
     }
 
@@ -445,35 +447,35 @@ public class EstimoNotificationsManager {
         mIMEINumber = imeinumber;
     }
 
-    public static void saveFCMToken(String token){
+    public static void saveFCMToken(Context context, String token){
         SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN",Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("TOKEN",token);
         spe.commit();
     }
 
-    public String getFCMToken(){
+    public String getFCMToken(Context context){
         SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN",Context.MODE_PRIVATE);
         return sp.getString("TOKEN","");
     }
 
-    private void saveUserId(String UserId){
+    private void saveUserId(Context context, String UserId){
         SharedPreferences sp = context.getSharedPreferences("USER_ID",Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("UserId",UserId);
         spe.commit();
     }
 
-    private String getUserId(){
+    private String getUserId(Context context){
         SharedPreferences sp = context.getSharedPreferences("USER_ID",Context.MODE_PRIVATE);
         return sp.getString("UserId","");
     }
 
-    private void sendPropertyEntryRequest(String url,String appName){
-        mPropertyController.visitProperty(getFCMToken(), url, appName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
+    private void sendPropertyEntryRequest(final Context context, String url, String appName){
+        mPropertyController.visitProperty(getFCMToken(context), url, appName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
-                saveUserId(String.valueOf(response.getUserId()));
+                saveUserId(context,String.valueOf(response.getUserId()));
                 Log.e(TAG,"PROPERTY_ENTRY: "+new Gson().toJson(response));
             }
 
@@ -484,8 +486,8 @@ public class EstimoNotificationsManager {
         });
     }
 
-    private void sendExitPropertyRequest(String url,String appName){
-        mPropertyController.exitProperty(getUserId(),url,getFCMToken(), appName, mIMEINumber,
+    private void sendExitPropertyRequest(Context context,String url,String appName){
+        mPropertyController.exitProperty(getUserId(context),url,getFCMToken(context), appName, mIMEINumber,
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
             public void response(PropertyExitResponse response) {
@@ -499,13 +501,13 @@ public class EstimoNotificationsManager {
         });
     }
 
-    public void sendAddUserRequest(String userName,String appName){
+    public void sendAddUserRequest(Context context,String userName,String appName){
         Log.e(TAG,"mUserName: "+userName);
-        Log.e(TAG,"getFCMToken(): "+getFCMToken());
+        Log.e(TAG,"getFCMToken(): "+getFCMToken(context));
         Log.e(TAG,"mAppName: "+appName);
         Log.e(TAG,"mIMEINumber: "+mIMEINumber);
 
-        mPropertyController.addUser(userName,"Android",getFCMToken(),appName, mIMEINumber,
+        mPropertyController.addUser(userName,"Android",getFCMToken(context),appName, mIMEINumber,
                 new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
