@@ -20,7 +20,7 @@ public class EstimoLibUtil {
 
     public static EstimoteCloudCredentials cloudCredentials;
 
-    private EstimoNotificationsManager mNm;
+    private EstimoteNotificationManager mNm;
     private boolean mIsMonitoringOn = false;
 
     public static NotificationListener mListener;
@@ -41,22 +41,10 @@ public class EstimoLibUtil {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
-            mNm = new EstimoNotificationsManager(mContext);
+            mNm = new EstimoteNotificationManager(mContext);
             mNm.startMonitoring(mContext,classRef,flag,appName);
         }
     }
-
-//    public void setBeaconMessageListener(OnBeaconMessageListener listener) {
-//        if(mNm != null) {
-//            mNm.setBeaconMessageListener(listener);
-//        }
-//    }
-
-//    public void removeBeaconMessageListener() {
-//        if(mNm != null) {
-//            mNm.removeBeaconMessageListener();
-//        }
-//    }
 
     public void startMonitoring(final Activity context, final Class classRef,
                                 final boolean flag, final String appName) {

@@ -5,10 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.estimotelib.EstimoNotificationsManager;
+import com.estimotelib.EstimoteNotificationManager;
 
 public class ActionButtonReceiver extends BroadcastReceiver {
-    EstimoNotificationsManager mNm;
+    EstimoteNotificationManager mNm;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -19,7 +19,7 @@ public class ActionButtonReceiver extends BroadcastReceiver {
             int noti_id = intent.getIntExtra("notification_id", 0);
             String url = intent.getStringExtra("url");
 
-            mNm = new EstimoNotificationsManager(context);
+            mNm = new EstimoteNotificationManager(context);
             mNm.storeMutedUrl(context,url);
 
             NotificationManager notificationManager = (NotificationManager) context

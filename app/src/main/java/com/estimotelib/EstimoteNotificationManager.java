@@ -22,6 +22,7 @@ import com.estimote.proximity_sdk.api.ProximityZoneBuilder;
 import com.estimote.proximity_sdk.api.ProximityZoneContext;
 import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
+import com.estimotelib.interfaces.OnBeaconMessageListener;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.PropertyExitResponse;
 import com.estimotelib.model.PropertyVisitResponse;
@@ -33,11 +34,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 
-public class EstimoNotificationsManager {
+public class EstimoteNotificationManager {
     public static final String TAG = "EstimoNotifications";
 
     private NotificationManager notificationManager;
@@ -48,9 +51,21 @@ public class EstimoNotificationsManager {
 
     private PropertyController mPropertyController;
 
-    public EstimoNotificationsManager(Context mContext) {
+    private boolean isFirstTime = false;
+
+    private OnBeaconMessageListener mBeaconMessageListener;
+
+    public EstimoteNotificationManager(Context mContext) {
         this.notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(mContext);
+    }
+
+    public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
+        this.mBeaconMessageListener = beaconMessageListener;
+    }
+
+    public void removeBeaconMessageListener() {
+        this.mBeaconMessageListener = null;
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value, int notification_id,
@@ -114,12 +129,10 @@ public class EstimoNotificationsManager {
         visitedBeacon(mContext,beaconId);
 
         Map<String, String> attachments = proximityZoneContext.getAttachments();
-        int notification_id = 0;
 
         for(Map.Entry<String, String> attachment: attachments.entrySet()) {
             key = attachment.getKey();
             value = attachment.getValue();
-            notification_id = notification_id+1;
 
             // Decide if the property is visited
             // if property is visited was 30 days ago, if yes we need to consider that property
@@ -133,17 +146,25 @@ public class EstimoNotificationsManager {
             }
 
             if(!isPropertyVisited) {
-                if(notification_id == 1) {
-                    showNotificationDialog(mContext,key, value,classRef,appName);
+                if(!isFirstTime && mBeaconMessageListener != null){
+                    isFirstTime = true;
+                    mBeaconMessageListener.onMessageReceived(key, value);
                 }else{
                     NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
-                            value, notification_id,classRef,flag);
-                    notificationManager.notify(notification_id, entryNotification.build());
+                            value, randomNotificationId(),classRef,flag);
+                    notificationManager.notify(randomNotificationId(), entryNotification.build());
                 }
 
                 sendPropertyEntryRequest(mContext,value,appName);
             }
         }
+    }
+
+    private int randomNotificationId(){
+        int min = 20;
+        int max = 80;
+        int random = new Random().nextInt((max - min) + 1) + min;
+        return random;
     }
 
     public void startMonitoring(final Activity mContext, final Class classRef, final boolean flag, final String appName) {
@@ -284,7 +305,6 @@ public class EstimoNotificationsManager {
 
             String stringDate = sdf.format(cDate.getTime());
             Date newDate = sdf.parse(stringDate);
-
 
             if (currentDate.after(newDate)) {
                 // for 30 days
@@ -512,31 +532,5 @@ public class EstimoNotificationsManager {
 
                     }
                 });
-    }
-
-    private void showNotificationDialog(final Activity mContext, final String key, final String value, final Class refClass,
-                                        String appName)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(appName);
-        builder.setMessage(key);
-        builder.setCancelable(true);
-        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent webViewIntent = new Intent(mContext, refClass);
-                webViewIntent.putExtra("WEB_VIEW_URL", value);
-                mContext.startActivity(webViewIntent);
-            }
-        });
-
-        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                storeMutedUrl(mContext,value);
-            }
-        });
-
-        builder.show();
     }
 }
