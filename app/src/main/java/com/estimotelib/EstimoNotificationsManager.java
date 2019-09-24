@@ -134,7 +134,7 @@ public class EstimoNotificationsManager {
 
             if(!isPropertyVisited) {
                 if(notification_id == 1) {
-                    showNotificationDialog(mContext,key, value,classRef);
+                    showNotificationDialog(mContext,key, value,classRef,appName);
                 }else{
                     NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
                             value, notification_id,classRef,flag);
@@ -514,10 +514,11 @@ public class EstimoNotificationsManager {
                 });
     }
 
-    private void showNotificationDialog(final Activity mContext,final String key , final String value,final Class refClass)
+    private void showNotificationDialog(final Activity mContext, final String key, final String value, final Class refClass,
+                                        String appName)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(mContext.getString(R.string.app_name));
+        builder.setTitle(appName);
         builder.setMessage(key);
         builder.setCancelable(true);
         builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
