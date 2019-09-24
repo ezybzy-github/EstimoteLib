@@ -534,7 +534,7 @@ public class EstimoteNotificationManager {
                 });
     }
 
-    private void showNotificationDialog(final Activity mContext, String appName, final String key,
+    public void showNotificationDialog(final Activity mContext, String appName, final String key,
                                         final String value, final Class classRef)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
