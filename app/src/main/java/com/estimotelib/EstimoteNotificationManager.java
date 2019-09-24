@@ -533,4 +533,30 @@ public class EstimoteNotificationManager {
                     }
                 });
     }
+
+    private void showNotificationDialog(final Activity mContext, String appName, final String key,
+                                        final String value, final Class classRef)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(appName);
+        builder.setMessage(key);
+        builder.setCancelable(true);
+        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent webViewIntent = new Intent(mContext, classRef);
+                webViewIntent.putExtra("WEB_VIEW_URL", value);
+                mContext.startActivity(webViewIntent);
+            }
+        });
+
+        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                storeMutedUrl(mContext,value);
+            }
+        });
+
+        builder.show();
+    }
 }
