@@ -78,7 +78,7 @@ public class EstimoNotificationsManager {
         webViewIntent.putExtra("WEB_VIEW_URL", value);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notification_id,
-                webViewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                webViewIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 
         //Pending intent for mute action
@@ -86,7 +86,8 @@ public class EstimoNotificationsManager {
         muteIntent.putExtra("url",value);
         muteIntent.putExtra("notification_id", notification_id);
         muteIntent.setAction("YES_MUTE");
-        PendingIntent pendingIntentMute = PendingIntent.getBroadcast(mContext, notification_id, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentMute = PendingIntent.getBroadcast(mContext, notification_id, muteIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         int defaults = 0;
         defaults = defaults | Notification.DEFAULT_LIGHTS;
@@ -293,7 +294,7 @@ public class EstimoNotificationsManager {
             Date newDate = sdf.parse(stringDate);
 
 
-            if (currentDate.before(newDate)) {
+            if (currentDate.after(newDate)) {
                 // for 30 days
                 dateMatch = true;
             }
