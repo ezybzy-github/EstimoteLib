@@ -46,17 +46,17 @@ public class EstimoLibUtil {
         }
     }
 
-    public void setBeaconMessageListener(OnBeaconMessageListener listener) {
-        if(mNm != null) {
-            mNm.setBeaconMessageListener(listener);
-        }
-    }
+//    public void setBeaconMessageListener(OnBeaconMessageListener listener) {
+//        if(mNm != null) {
+//            mNm.setBeaconMessageListener(listener);
+//        }
+//    }
 
-    public void removeBeaconMessageListener() {
-        if(mNm != null) {
-            mNm.removeBeaconMessageListener();
-        }
-    }
+//    public void removeBeaconMessageListener() {
+//        if(mNm != null) {
+//            mNm.removeBeaconMessageListener();
+//        }
+//    }
 
     public void startMonitoring(final Activity context, final Class classRef,
                                 final boolean flag, final String appName) {

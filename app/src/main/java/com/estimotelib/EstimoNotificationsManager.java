@@ -6,12 +6,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import com.estimote.proximity_sdk.api.ProximityObserver;
 import com.estimote.proximity_sdk.api.ProximityObserverBuilder;
@@ -39,7 +41,6 @@ public class EstimoNotificationsManager {
     public static final String TAG = "EstimoNotifications";
 
     private NotificationManager notificationManager;
-    private OnBeaconMessageListener mBeaconMessageListener;
 
     private String key,value;
 
@@ -50,14 +51,6 @@ public class EstimoNotificationsManager {
     public EstimoNotificationsManager(Context mContext) {
         this.notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(mContext);
-    }
-
-    public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
-        this.mBeaconMessageListener = beaconMessageListener;
-    }
-
-    public void removeBeaconMessageListener() {
-        this.mBeaconMessageListener = null;
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value, int notification_id,
@@ -140,12 +133,11 @@ public class EstimoNotificationsManager {
             }
 
             if(!isPropertyVisited) {
-                NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
-                        value, notification_id,classRef,flag);
-
-                if(notification_id == 1 && mBeaconMessageListener != null) {
-                    mBeaconMessageListener.onMessageReceived(key, value);
+                if(notification_id == 1) {
+                    showNotificationDialog(mContext,key, value,classRef);
                 }else{
+                    NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
+                            value, notification_id,classRef,flag);
                     notificationManager.notify(notification_id, entryNotification.build());
                 }
 
@@ -520,5 +512,30 @@ public class EstimoNotificationsManager {
 
                     }
                 });
+    }
+
+    private void showNotificationDialog(final Activity mContext,final String key , final String value,final Class refClass)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(mContext.getString(R.string.app_name));
+        builder.setMessage(key);
+        builder.setCancelable(true);
+        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent webViewIntent = new Intent(mContext, refClass);
+                webViewIntent.putExtra("WEB_VIEW_URL", value);
+                mContext.startActivity(webViewIntent);
+            }
+        });
+
+        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                storeMutedUrl(mContext,value);
+            }
+        });
+
+        builder.show();
     }
 }
