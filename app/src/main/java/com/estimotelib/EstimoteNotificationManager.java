@@ -6,12 +6,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import com.estimote.proximity_sdk.api.ProximityObserver;
 import com.estimote.proximity_sdk.api.ProximityObserverBuilder;
@@ -42,20 +44,15 @@ public class EstimoteNotificationManager {
     public static final String TAG = "EstimoNotifications";
 
     private NotificationManager notificationManager;
-
     private String key,value;
-
     private String mIMEINumber;
-
     private PropertyController mPropertyController;
-
     private boolean isFirstTime = false;
-
     private OnBeaconMessageListener mBeaconMessageListener;
 
-    public EstimoteNotificationManager(Context mContext) {
-        this.notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mPropertyController = new PropertyController(mContext);
+    public EstimoteNotificationManager(Context context) {
+        this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mPropertyController = new PropertyController(context);
     }
 
     public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
@@ -146,7 +143,8 @@ public class EstimoteNotificationManager {
             if(!isPropertyVisited) {
                 if(!isFirstTime && mBeaconMessageListener != null){
                     isFirstTime = true;
-                    mBeaconMessageListener.onMessageReceived(key, value);
+                    //mBeaconMessageListener.onMessageReceived(key, value);
+                    showNotificationDialog(mContext,appName, key, value, classRef);
                 }else{
                     NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
                             value, randomNotificationId(),classRef,flag);
@@ -157,6 +155,38 @@ public class EstimoteNotificationManager {
             sendPropertyEntryRequest(mContext,value,appName);
         }
     }
+
+    public void showNotificationDialog(final Context context,
+                                       final String appName, final String key,
+                                       final String value, final Class classRef) {
+
+        if(context == null) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(appName);
+        builder.setMessage(key);
+        builder.setCancelable(true);
+        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent webViewIntent = new Intent(context, classRef);
+                webViewIntent.putExtra("WEB_VIEW_URL", value);
+                context.startActivity(webViewIntent);
+            }
+        });
+
+        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                storeMutedUrl(context,value);
+            }
+        });
+
+        builder.show();
+    }
+
 
     private int randomNotificationId(){
         int min = 20;
