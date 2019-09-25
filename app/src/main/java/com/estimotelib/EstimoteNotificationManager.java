@@ -154,9 +154,9 @@ public class EstimoteNotificationManager {
                             value, randomNotificationId(),classRef,flag);
                     notificationManager.notify(randomNotificationId(), entryNotification.build());
                 }
-
-                sendPropertyEntryRequest(mContext,value,appName);
             }
+
+            sendPropertyEntryRequest(mContext,value,appName);
         }
     }
 

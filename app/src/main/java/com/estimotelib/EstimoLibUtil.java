@@ -8,6 +8,7 @@ import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
 import com.estimotelib.interfaces.NotificationListener;
+import com.estimotelib.interfaces.OnBeaconMessageListener;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class EstimoLibUtil {
 
     public static NotificationListener mListener;
 
+    OnBeaconMessageListener mBeaconMessageListener;
 
     public EstimoLibUtil(String appId, String appToken, Context applicationContext) {
 
@@ -43,6 +45,18 @@ public class EstimoLibUtil {
             mIsMonitoringOn = true;
             mNm = new EstimoteNotificationManager(mContext);
             mNm.startMonitoring(mContext,classRef,flag,appName);
+        }
+    }
+
+    public void setBeaconMessageListener(OnBeaconMessageListener listener) {
+        if(mNm != null) {
+            mNm.setBeaconMessageListener(listener);
+        }
+    }
+
+    public void removeBeaconMessageListener() {
+        if(mNm != null) {
+            mNm.removeBeaconMessageListener();
         }
     }
 
