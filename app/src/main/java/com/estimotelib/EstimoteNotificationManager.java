@@ -141,7 +141,7 @@ public class EstimoteNotificationManager {
             }
 
             if(!isPropertyVisited) {
-                if(!isFirstTime && mBeaconMessageListener != null){
+                if(!isFirstTime){
                     isFirstTime = true;
                     //mBeaconMessageListener.onMessageReceived(key, value);
                     showNotificationDialog(mContext,appName, key, value, classRef);
