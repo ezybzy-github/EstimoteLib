@@ -6,14 +6,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import com.estimote.proximity_sdk.api.ProximityObserver;
 import com.estimote.proximity_sdk.api.ProximityObserverBuilder;
@@ -169,7 +167,7 @@ public class EstimoteNotificationManager {
 
     public void startMonitoring(final Activity mContext, final Class classRef, final boolean flag, final String appName) {
         ProximityObserver proximityObserver =
-                new ProximityObserverBuilder(mContext, EstimoLibUtil.cloudCredentials)
+                new ProximityObserverBuilder(mContext, EstimoteLibUtil.cloudCredentials)
                         .onError(new Function1<Throwable, Unit>() {
                             @Override
                             public Unit invoke(Throwable throwable) {
@@ -532,31 +530,5 @@ public class EstimoteNotificationManager {
 
                     }
                 });
-    }
-
-    public void showNotificationDialog(final Activity mContext, String appName, final String key,
-                                        final String value, final Class classRef)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(appName);
-        builder.setMessage(key);
-        builder.setCancelable(true);
-        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent webViewIntent = new Intent(mContext, classRef);
-                webViewIntent.putExtra("WEB_VIEW_URL", value);
-                mContext.startActivity(webViewIntent);
-            }
-        });
-
-        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                storeMutedUrl(mContext,value);
-            }
-        });
-
-        builder.show();
     }
 }
