@@ -49,10 +49,19 @@ public class EstimoteNotificationManager {
     private PropertyController mPropertyController;
     private boolean isFirstTime = false;
     private OnBeaconMessageListener mBeaconMessageListener;
+    private static OnBeaconMessageListener mStaticListener;
 
     public EstimoteNotificationManager(Context context) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(context);
+    }
+
+    public static void setAlertDialogListener(OnBeaconMessageListener listener) {
+        mStaticListener = listener;
+    }
+
+    public static void removeAlertDialogListner(OnBeaconMessageListener listener) {
+        mStaticListener = null;
     }
 
     public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
@@ -141,10 +150,9 @@ public class EstimoteNotificationManager {
             }
 
             if(!isPropertyVisited) {
-                if(!isFirstTime){
+                if(!isFirstTime && mStaticListener != null){
                     isFirstTime = true;
-                    //mBeaconMessageListener.onMessageReceived(key, value);
-                    showNotificationDialog(mContext,appName, key, value, classRef);
+                    mStaticListener.onMessageReceived(key, value);
                 }else{
                     NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
                             value, randomNotificationId(),classRef,flag);
@@ -155,38 +163,6 @@ public class EstimoteNotificationManager {
             sendPropertyEntryRequest(mContext,value,appName);
         }
     }
-
-    public void showNotificationDialog(final Context context,
-                                       final String appName, final String key,
-                                       final String value, final Class classRef) {
-
-        if(context == null) {
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(appName);
-        builder.setMessage(key);
-        builder.setCancelable(true);
-        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent webViewIntent = new Intent(context, classRef);
-                webViewIntent.putExtra("WEB_VIEW_URL", value);
-                context.startActivity(webViewIntent);
-            }
-        });
-
-        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                storeMutedUrl(context,value);
-            }
-        });
-
-        builder.show();
-    }
-
 
     private int randomNotificationId(){
         int min = 20;
