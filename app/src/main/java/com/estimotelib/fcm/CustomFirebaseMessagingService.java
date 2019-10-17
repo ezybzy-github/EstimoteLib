@@ -5,8 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-
-import com.estimotelib.EstimoteLibUtil;
+import com.estimotelib.FCMNotificationManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONObject;
@@ -17,14 +16,11 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
 
-    EstimoteLibUtil mEstimoteLibUtil;
-
     @Override
     public void onCreate()
     {
         // TODO Auto-generated method stub
         super.onCreate();
-        mEstimoteLibUtil = new EstimoteLibUtil();
     }
 
     @Override
@@ -59,8 +55,10 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"message: "+message);
         Log.e(TAG,"appName: "+appName);
 
-        if(mEstimoteLibUtil.mNotificationListener != null){
-            mEstimoteLibUtil.mNotificationListener.onFcmMessageReceived(title,message,Image,appName,url);
+        if(FCMNotificationManager.mFcmNotificationListener != null){
+            FCMNotificationManager.mFcmNotificationListener.onFcmMessageReceived(title,message,Image,appName,url);
+        }else {
+            Log.e(TAG,"Listener null");
         }
     }
 
