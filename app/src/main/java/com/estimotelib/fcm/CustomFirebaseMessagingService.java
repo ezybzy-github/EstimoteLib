@@ -35,19 +35,25 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         if (remoteMessage == null)
             return;
 
-        if (remoteMessage.getNotification() != null) {
-            Log.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            Log.e(TAG, "Message Notification Title: " + remoteMessage.getNotification().getTitle());
-        }
         // Check if message contains a data payload.
         Map<String, String> data = remoteMessage.getData();
         try {
             JSONObject dataJSON = new JSONObject(data);
             Log.e("onMessageReceived-->","" + data);
-            processNotification(dataJSON,remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody());
+            if(remoteMessage.getNotification().getTitle() != null){
+                processNotification(dataJSON,remoteMessage.getNotification().getTitle(),
+                        remoteMessage.getNotification().getBody());
+            }else {
+                processNotification(dataJSON,"",remoteMessage.getNotification().getBody());
+            }
+
         } catch (Exception e) {
             Log.e("onMessageReceived-->","" + e.getMessage());
+        }
+
+        if (remoteMessage.getNotification() != null) {
+            Log.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.e(TAG, "Message Notification Title: " + remoteMessage.getNotification().getTitle());
         }
     }
 

@@ -30,8 +30,7 @@ public class FCMNotificationManager {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void createNotification(String title, Context context, String msg, String url, String appName,
-                                   String packageName,String activityName) {
+    public void createNotification(String title, Context context, String msg, String url, String appName, Class classRef) {
 
         final int NOTIFY_ID = 0; // ID of notification
         PendingIntent pendingIntent;
@@ -54,14 +53,18 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(packageName, activityName));
+            if(!isAppIsInBackground(context)){
+                intent.setComponent(new ComponentName(context, classRef));
+            }else {
+                intent.setClass(context, classRef);
+            }
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             builder.setContentTitle(appName)                            // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                    .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                     .setContentText(msg) // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
@@ -74,14 +77,18 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(packageName, activityName));
+            if(!isAppIsInBackground(context)){
+                intent.setComponent(new ComponentName(context, classRef));
+            }else {
+                intent.setClass(context, classRef);
+            }
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             builder.setContentTitle(appName)                            // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                    .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                     .setContentText(msg) // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
@@ -95,19 +102,19 @@ public class FCMNotificationManager {
     }
 
     public void createPictureTypeNotification(Context context, String title, String message, String imageUrl,
-                                              String appName, String url, String packageName,String activityName){
+                                              String appName, String url, Class classRef){
         new generatePictureStyleNotification(context,title, message,
-                imageUrl,appName,url,packageName,activityName).execute();
+                imageUrl,appName,url,classRef).execute();
     }
 
     public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
         private Context mContext;
-        private String title, message, imageUrl,appName,url,packageName,activityName;
+        private String title, message, imageUrl,appName,url;
+        private Class classRef;
 
         public generatePictureStyleNotification(Context context, String title, String message,
-                                                String imageUrl, String appName, String url,String packageName,
-                                                String activityName) {
+                                                String imageUrl, String appName, String url, Class classRef) {
             super();
             this.mContext = context;
             this.title = title;
@@ -115,8 +122,7 @@ public class FCMNotificationManager {
             this.imageUrl = imageUrl;
             this.appName = appName;
             this.url = url;
-            this.packageName = packageName;
-            this.activityName = activityName;
+            this.classRef = classRef;
         }
 
         @Override
@@ -165,14 +171,18 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(packageName, activityName));
+                if(!isAppIsInBackground(mContext)){
+                    intent.setComponent(new ComponentName(mContext, classRef));
+                }else {
+                    intent.setClass(mContext, classRef);
+                }
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
 
                 builder.setContentTitle(appName)                            // required
-                        .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                        .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                         .setContentText(message) // required
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setAutoCancel(true)
@@ -188,14 +198,19 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(packageName, activityName));
+                if(!isAppIsInBackground(mContext)){
+                    intent.setComponent(new ComponentName(mContext, classRef));
+                }else {
+                    intent.setClass(mContext, classRef);
+                }
+
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
 
                 builder.setContentTitle(appName)                            // required
-                        .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                        .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                         .setContentText(message) // required
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setAutoCancel(true)
