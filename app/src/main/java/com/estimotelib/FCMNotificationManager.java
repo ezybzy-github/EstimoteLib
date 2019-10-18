@@ -57,7 +57,8 @@ public class FCMNotificationManager {
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                 notificationManager.createNotificationChannel(mChannel);
             }
-            builder = new NotificationCompat.Builder(context, "content_channel");
+            builder = new NotificationCompat.Builder(context,
+                    context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent(context,classRef);
             intent.putExtra("WEB_VIEW_URL", url);
@@ -76,7 +77,8 @@ public class FCMNotificationManager {
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         }
         else {
-            builder = new NotificationCompat.Builder(context, "content_channel");
+            builder = new NotificationCompat.Builder(context,
+                    context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent(context,classRef);
             intent.putExtra("WEB_VIEW_URL", url);
@@ -159,7 +161,8 @@ public class FCMNotificationManager {
 
                 NotificationChannel mChannel = notificationManager.getNotificationChannel("content_channel");
                 if (mChannel == null) {
-                    mChannel = new NotificationChannel("content_channel", "Things near you", importance);
+                    mChannel = new NotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id),
+                            "Things near you", importance);
                     mChannel.enableVibration(true);
                     mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                     notificationManager.createNotificationChannel(mChannel);
@@ -186,7 +189,8 @@ public class FCMNotificationManager {
                                 .bigPicture(result));
             }
             else {
-                builder = new NotificationCompat.Builder(mContext, "content_channel");
+                builder = new NotificationCompat.Builder(mContext,
+                        mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent(mContext,classRef);
                 intent.putExtra("WEB_VIEW_URL", url);
