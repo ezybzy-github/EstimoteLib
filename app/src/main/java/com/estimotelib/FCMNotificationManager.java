@@ -1,6 +1,7 @@
 package com.estimotelib;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public class FCMNotificationManager {
     public static final String TAG = "FCMNotificationManager";
@@ -51,7 +53,11 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(context, classRef));
+            if(!isAppIsInBackground(context)){
+                intent.setComponent(new ComponentName(context, classRef));
+            }else {
+                intent.setClass(context, classRef);
+            }
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -71,7 +77,11 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(context, classRef));
+            if(!isAppIsInBackground(context)){
+                intent.setComponent(new ComponentName(context, classRef));
+            }else {
+                intent.setClass(context, classRef);
+            }
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -161,7 +171,11 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(mContext, classRef));
+                if(!isAppIsInBackground(mContext)){
+                    intent.setComponent(new ComponentName(mContext, classRef));
+                }else {
+                    intent.setClass(mContext, classRef);
+                }
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -184,7 +198,12 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(mContext, classRef));
+                if(!isAppIsInBackground(mContext)){
+                    intent.setComponent(new ComponentName(mContext, classRef));
+                }else {
+                    intent.setClass(mContext, classRef);
+                }
+
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -206,5 +225,30 @@ public class FCMNotificationManager {
             Notification notification = builder.build();
             notificationManager.notify(NOTIFY_ID, notification);
         }
+    }
+
+    public static boolean isAppIsInBackground(Context context) {
+        boolean isInBackground = true;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (String activeProcess : processInfo.pkgList) {
+                        if (activeProcess.equals(context.getPackageName())) {
+                            isInBackground = false;
+                        }
+                    }
+                }
+            }
+        } else {
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            ComponentName componentInfo = taskInfo.get(0).topActivity;
+            if (componentInfo.getPackageName().equals(context.getPackageName())) {
+                isInBackground = false;
+            }
+        }
+
+        return isInBackground;
     }
 }
