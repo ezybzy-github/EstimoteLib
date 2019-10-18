@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import com.estimotelib.interfaces.OnFCMNotificationListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -25,33 +24,31 @@ public class FCMNotificationManager {
 
     private NotificationManager notificationManager;
 
-    private int NOTIFY_ID = 0; // ID of notification
-    private PendingIntent pendingIntent;
-    private NotificationCompat.Builder builder;
-    private NotificationChannel mChannel;
-
     public FCMNotificationManager(Context context) {
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mChannel = notificationManager.getNotificationChannel("content_chanel");
-        }
+        this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     public void createNotification(String title, Context context, String msg, String url, String appName, Class classRef) {
 
+        final int NOTIFY_ID = 0; // ID of notification
+        PendingIntent pendingIntent;
+        NotificationCompat.Builder builder;
+        if (notificationManager == null) {
+            notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
+            NotificationChannel mChannel = notificationManager.getNotificationChannel(context.getResources().getString(R.string.default_notification_channel_id));
             if (mChannel == null) {
-                mChannel = new NotificationChannel("content_chanel","Things near you", importance);
+                mChannel = new NotificationChannel(context.getResources().getString(R.string.default_notification_channel_id),
+                        "Things near you", importance);
                 mChannel.enableVibration(true);
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                 notificationManager.createNotificationChannel(mChannel);
             }
-            builder = new NotificationCompat.Builder(context, "content_chanel");
+            builder = new NotificationCompat.Builder(context,
+                    context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
             intent.setComponent(new ComponentName(context, classRef));
@@ -70,7 +67,8 @@ public class FCMNotificationManager {
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         }
         else {
-            builder = new NotificationCompat.Builder(context, "content_chanel");
+            builder = new NotificationCompat.Builder(context,
+                    context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
             intent.setComponent(new ComponentName(context, classRef));
@@ -142,17 +140,25 @@ public class FCMNotificationManager {
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
 
+            final int NOTIFY_ID = 0; // ID of notification
+            PendingIntent pendingIntent;
+            NotificationCompat.Builder builder;
+            if (notificationManager == null) {
+                notificationManager = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int importance = NotificationManager.IMPORTANCE_HIGH;
 
-                mChannel = notificationManager.getNotificationChannel("content_chanel");
+                NotificationChannel mChannel = notificationManager.getNotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id));
                 if (mChannel == null) {
-                    mChannel = new NotificationChannel("content_chanel","Things near you", importance);
+                    mChannel = new NotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id),
+                            "Things near you", importance);
                     mChannel.enableVibration(true);
                     mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                     notificationManager.createNotificationChannel(mChannel);
                 }
-                builder = new NotificationCompat.Builder(mContext, "content_chanel");
+                builder = new NotificationCompat.Builder(mContext,
+                        mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName(mContext, classRef));
@@ -174,7 +180,8 @@ public class FCMNotificationManager {
                                 .bigPicture(result));
             }
             else {
-                builder = new NotificationCompat.Builder(mContext,"content_chanel");
+                builder = new NotificationCompat.Builder(mContext,
+                        mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName(mContext, classRef));
