@@ -55,6 +55,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"message: "+message);
         Log.e(TAG,"appName: "+appName);
 
+        Log.e("FcmNotificationListener","onService: "+FCMNotificationManager.mFcmNotificationListener);
         if(FCMNotificationManager.mFcmNotificationListener != null){
             FCMNotificationManager.mFcmNotificationListener.onFcmMessageReceived(title,message,Image,appName,url);
         }else {

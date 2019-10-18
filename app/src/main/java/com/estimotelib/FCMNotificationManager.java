@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.estimotelib.interfaces.OnFCMNotificationListener;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class FCMNotificationManager {
 
     public void setFCMListener(OnFCMNotificationListener fcmMessageListener) {
         mFcmNotificationListener = fcmMessageListener;
+        Log.e("FcmNotificationListener","FCMNotificationManager: "+mFcmNotificationListener);
     }
 
     public void removeFCMListener() {
