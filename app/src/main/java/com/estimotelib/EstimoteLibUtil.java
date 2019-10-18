@@ -69,12 +69,12 @@ public class EstimoteLibUtil {
     }
 
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
-                                    Class refClass){
+                                    String packageName,String activityName){
         if(!image.equalsIgnoreCase("")){
             mFCMNotificationManager.
-                    createPictureTypeNotification(ctx,title,message,image,appName,url, refClass);
+                    createPictureTypeNotification(ctx,title,message,image,appName,url, packageName,activityName);
         }else{
-            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,refClass);
+            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,packageName,activityName);
         }
     }
 

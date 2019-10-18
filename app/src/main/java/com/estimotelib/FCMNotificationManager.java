@@ -30,7 +30,8 @@ public class FCMNotificationManager {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void createNotification(String title, Context context, String msg, String url, String appName, Class classRef) {
+    public void createNotification(String title, Context context, String msg, String url, String appName,
+                                   String packageName,String activityName) {
 
         final int NOTIFY_ID = 0; // ID of notification
         PendingIntent pendingIntent;
@@ -53,11 +54,7 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            if(!isAppIsInBackground(context)){
-                intent.setComponent(new ComponentName(context, classRef));
-            }else {
-                intent.setClass(context, classRef);
-            }
+            intent.setComponent(new ComponentName(packageName, activityName));
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -77,11 +74,7 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            if(!isAppIsInBackground(context)){
-                intent.setComponent(new ComponentName(context, classRef));
-            }else {
-                intent.setClass(context, classRef);
-            }
+            intent.setComponent(new ComponentName(packageName, activityName));
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -102,19 +95,19 @@ public class FCMNotificationManager {
     }
 
     public void createPictureTypeNotification(Context context, String title, String message, String imageUrl,
-                                              String appName, String url, Class classRef){
+                                              String appName, String url, String packageName,String activityName){
         new generatePictureStyleNotification(context,title, message,
-                imageUrl,appName,url,classRef).execute();
+                imageUrl,appName,url,packageName,activityName).execute();
     }
 
     public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
         private Context mContext;
-        private String title, message, imageUrl,appName,url;
-        private Class classRef;
+        private String title, message, imageUrl,appName,url,packageName,activityName;
 
         public generatePictureStyleNotification(Context context, String title, String message,
-                                                String imageUrl, String appName, String url, Class classRef) {
+                                                String imageUrl, String appName, String url,String packageName,
+                                                String activityName) {
             super();
             this.mContext = context;
             this.title = title;
@@ -122,7 +115,8 @@ public class FCMNotificationManager {
             this.imageUrl = imageUrl;
             this.appName = appName;
             this.url = url;
-            this.classRef = classRef;
+            this.packageName = packageName;
+            this.activityName = activityName;
         }
 
         @Override
@@ -171,11 +165,7 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                if(!isAppIsInBackground(mContext)){
-                    intent.setComponent(new ComponentName(mContext, classRef));
-                }else {
-                    intent.setClass(mContext, classRef);
-                }
+                intent.setComponent(new ComponentName(packageName, activityName));
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -198,12 +188,7 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                if(!isAppIsInBackground(mContext)){
-                    intent.setComponent(new ComponentName(mContext, classRef));
-                }else {
-                    intent.setClass(mContext, classRef);
-                }
-
+                intent.setComponent(new ComponentName(packageName, activityName));
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
