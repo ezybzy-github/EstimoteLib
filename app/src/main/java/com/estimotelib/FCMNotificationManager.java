@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+
 import com.estimotelib.interfaces.OnFCMNotificationListener;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,15 +47,19 @@ public class FCMNotificationManager {
         final int NOTIFY_ID = 0; // ID of notification
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
+
+        Log.e(TAG,"ClassName: "+classRef);
+
         if (notificationManager == null) {
             notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
-            NotificationChannel mChannel = notificationManager.getNotificationChannel("content_channel");
+            NotificationChannel mChannel = notificationManager.getNotificationChannel(context.getResources().getString(R.string.default_notification_channel_id));
             if (mChannel == null) {
-                mChannel = new NotificationChannel("content_channel", "Things near you", importance);
+                mChannel = new NotificationChannel(context.getResources().getString(R.string.default_notification_channel_id),
+                        "Things near you", importance);
                 mChannel.enableVibration(true);
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                 notificationManager.createNotificationChannel(mChannel);
@@ -60,9 +67,9 @@ public class FCMNotificationManager {
             builder = new NotificationCompat.Builder(context,
                     context.getResources().getString(R.string.default_notification_channel_id));
 
-            Intent intent = new Intent(context,classRef);
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(context, classRef));
             intent.putExtra("WEB_VIEW_URL", url);
-            intent.setAction(appName);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -80,9 +87,9 @@ public class FCMNotificationManager {
             builder = new NotificationCompat.Builder(context,
                     context.getResources().getString(R.string.default_notification_channel_id));
 
-            Intent intent = new Intent(context,classRef);
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(context, classRef));
             intent.putExtra("WEB_VIEW_URL", url);
-            intent.setAction(appName);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -159,7 +166,7 @@ public class FCMNotificationManager {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 int importance = NotificationManager.IMPORTANCE_HIGH;
 
-                NotificationChannel mChannel = notificationManager.getNotificationChannel("content_channel");
+                NotificationChannel mChannel = notificationManager.getNotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id));
                 if (mChannel == null) {
                     mChannel = new NotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id),
                             "Things near you", importance);
@@ -167,11 +174,12 @@ public class FCMNotificationManager {
                     mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                     notificationManager.createNotificationChannel(mChannel);
                 }
-                builder = new NotificationCompat.Builder(mContext, "content_channel");
+                builder = new NotificationCompat.Builder(mContext,
+                        mContext.getResources().getString(R.string.default_notification_channel_id));
 
-                Intent intent = new Intent(mContext,classRef);
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName(mContext, classRef));
                 intent.putExtra("WEB_VIEW_URL", url);
-                intent.setAction(appName);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
@@ -192,9 +200,9 @@ public class FCMNotificationManager {
                 builder = new NotificationCompat.Builder(mContext,
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
-                Intent intent = new Intent(mContext,classRef);
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName(mContext, classRef));
                 intent.putExtra("WEB_VIEW_URL", url);
-                intent.setAction(appName);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
