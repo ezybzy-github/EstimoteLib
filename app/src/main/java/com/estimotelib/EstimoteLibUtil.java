@@ -68,21 +68,6 @@ public class EstimoteLibUtil {
         }
     }
 
-//    public void setFireBaseMessageListener(OnFCMNotificationListener listener) {
-//        Log.e("FcmNotificationListener","EstimoteUtil: "+listener);
-//        if(mFCMNotificationManager != null) {
-//            mFCMNotificationManager.setFCMListener(listener);
-//        }else{
-//            Log.e("CMNotificationManager","null");
-//        }
-//    }
-//
-//    public void removeFireBaseMessageListener() {
-//        if(mFCMNotificationManager != null) {
-//            mFCMNotificationManager.removeFCMListener();
-//        }
-//    }
-
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
                                     Class refClass){
         if(!image.equalsIgnoreCase("")){
