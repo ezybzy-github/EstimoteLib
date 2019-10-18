@@ -31,8 +31,8 @@ public class FCMNotificationManager {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void setFCMListener(OnFCMNotificationListener beaconMessageListener) {
-        mFcmNotificationListener = beaconMessageListener;
+    public void setFCMListener(OnFCMNotificationListener fcmMessageListener) {
+        mFcmNotificationListener = fcmMessageListener;
     }
 
     public void removeFCMListener() {

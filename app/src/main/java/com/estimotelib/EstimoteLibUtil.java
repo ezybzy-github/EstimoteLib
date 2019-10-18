@@ -29,7 +29,7 @@ public class EstimoteLibUtil {
 
     private NotificationManager notificationManager;
 
-    private FCMNotificationManager mFireBaseNotificationManager;
+    private FCMNotificationManager mFCMNotificationManager;
 
     private PreferenceUtil mPreferenceUtil;
 
@@ -40,6 +40,7 @@ public class EstimoteLibUtil {
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
         notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mPreferenceUtil = new PreferenceUtil();
+        mFCMNotificationManager = new FCMNotificationManager(applicationContext);
     }
 
     public EstimoteLibUtil(){
@@ -68,24 +69,24 @@ public class EstimoteLibUtil {
     }
 
     public void setFireBaseMessageListener(OnFCMNotificationListener listener) {
-        if(mFireBaseNotificationManager != null) {
-            mFireBaseNotificationManager.setFCMListener(listener);
+        if(mFCMNotificationManager != null) {
+            mFCMNotificationManager.setFCMListener(listener);
         }
     }
 
     public void removeFireBaseMessageListener() {
-        if(mFireBaseNotificationManager != null) {
-            mFireBaseNotificationManager.removeFCMListener();
+        if(mFCMNotificationManager != null) {
+            mFCMNotificationManager.removeFCMListener();
         }
     }
 
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
                                     Class refClass){
         if(!image.equalsIgnoreCase("")){
-            mFireBaseNotificationManager.
+            mFCMNotificationManager.
                     createPictureTypeNotification(ctx,title,message,image,appName,url, refClass);
         }else{
-            mFireBaseNotificationManager.createNotification(title,ctx,message,url,appName,refClass);
+            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,refClass);
         }
     }
 
