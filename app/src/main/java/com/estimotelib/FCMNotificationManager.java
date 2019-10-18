@@ -12,8 +12,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-
 import com.estimotelib.interfaces.OnFCMNotificationListener;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,14 +30,14 @@ public class FCMNotificationManager {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void setFCMListener(OnFCMNotificationListener fcmMessageListener) {
-        mFcmNotificationListener = fcmMessageListener;
-        Log.e("FcmNotificationListener","FCMNotificationManager: "+mFcmNotificationListener);
-    }
-
-    public void removeFCMListener() {
-        mFcmNotificationListener = null;
-    }
+//    public void setFCMListener(OnFCMNotificationListener fcmMessageListener) {
+//        mFcmNotificationListener = fcmMessageListener;
+//        Log.e("FcmNotificationListener","FCMNotificationManager: "+mFcmNotificationListener);
+//    }
+//
+//    public void removeFCMListener() {
+//        mFcmNotificationListener = null;
+//    }
 
     public void createNotification(String title, Context context, String msg, String url, String appName, Class classRef) {
 

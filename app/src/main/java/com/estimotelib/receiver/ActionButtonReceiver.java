@@ -9,8 +9,6 @@ import com.estimotelib.EstimoteNotificationManager;
 import com.estimotelib.PreferenceUtil;
 
 public class ActionButtonReceiver extends BroadcastReceiver {
-    EstimoteNotificationManager mNm;
-
     PreferenceUtil mPreferenceUtil;
 
     @Override
