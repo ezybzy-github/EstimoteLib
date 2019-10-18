@@ -32,18 +32,6 @@ import java.util.Random;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-import static com.estimotelib.PreferenceUtil.checkDate;
-import static com.estimotelib.PreferenceUtil.getFCMToken;
-import static com.estimotelib.PreferenceUtil.getUserId;
-import static com.estimotelib.PreferenceUtil.isBeaconNotificationReceivedInTwelveHours;
-import static com.estimotelib.PreferenceUtil.mIMEINumber;
-import static com.estimotelib.PreferenceUtil.matchKeyFromMuteMap;
-import static com.estimotelib.PreferenceUtil.saveBeaconEnterDetail;
-import static com.estimotelib.PreferenceUtil.saveBeaconExitDetail;
-import static com.estimotelib.PreferenceUtil.saveUserId;
-import static com.estimotelib.PreferenceUtil.visitedBeacon;
-
-
 public class EstimoteNotificationManager {
     public static final String TAG = "EstimoNotifications";
 
@@ -54,9 +42,13 @@ public class EstimoteNotificationManager {
     private OnBeaconMessageListener mBeaconMessageListener;
     private static OnBeaconMessageListener mStaticListener;
 
+    private PreferenceUtil mPreferenceUtil;
+
     public EstimoteNotificationManager(Context context) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(context);
+
+        mPreferenceUtil = new PreferenceUtil();
     }
 
     public static void setAlertDialogListener(OnBeaconMessageListener listener) {
@@ -129,11 +121,11 @@ public class EstimoteNotificationManager {
                                                      Class classRef, boolean flag, String appName) throws ClassNotFoundException {
         final String beaconId = proximityZoneContext.getDeviceId();
 
-        if(isBeaconNotificationReceivedInTwelveHours(mContext,beaconId)) {
+        if(mPreferenceUtil.isBeaconNotificationReceivedInTwelveHours(mContext,beaconId)) {
             return;
         }
 
-        visitedBeacon(mContext,beaconId);
+        mPreferenceUtil.visitedBeacon(mContext,beaconId);
 
         Map<String, String> attachments = proximityZoneContext.getAttachments();
 
@@ -144,10 +136,10 @@ public class EstimoteNotificationManager {
             // Decide if the property is visited
             // if property is visited was 30 days ago, if yes we need to consider that property
             boolean isPropertyVisited = false;
-            if(matchKeyFromMuteMap(mContext,value)) {
+            if(mPreferenceUtil.matchKeyFromMuteMap(mContext,value)) {
                 isPropertyVisited = true;
 
-                if(checkDate(mContext,value)) {
+                if(mPreferenceUtil.checkDate(mContext,value)) {
                     isPropertyVisited = false;
                 }
             }
@@ -193,7 +185,7 @@ public class EstimoteNotificationManager {
                 .onEnter(new Function1<ProximityZoneContext, Unit>() {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
-                        saveBeaconEnterDetail(mContext,proximityContext.getDeviceId());
+                        mPreferenceUtil.saveBeaconEnterDetail(mContext,proximityContext.getDeviceId());
                         try {
                             readAttachmentsAndShowNotifications(mContext,proximityContext,classRef,flag,appName);
                         } catch (ClassNotFoundException e) {
@@ -205,7 +197,7 @@ public class EstimoteNotificationManager {
                 .onExit(new Function1<ProximityZoneContext, Unit>() {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
-                        saveBeaconExitDetail(mContext,proximityContext.getDeviceId());
+                        mPreferenceUtil.saveBeaconExitDetail(mContext,proximityContext.getDeviceId());
                         readAttachment(mContext,proximityContext,appName);
                         return null;
                     }
@@ -224,10 +216,11 @@ public class EstimoteNotificationManager {
     }
 
     private void sendPropertyEntryRequest(final Context context, String url, String appName){
-        mPropertyController.visitProperty(getFCMToken(context), url, appName, mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
+        mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
+                mPreferenceUtil.mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
-                saveUserId(context, String.valueOf(response.getUserId()));
+                mPreferenceUtil.saveUserId(context, String.valueOf(response.getUserId()));
                 Log.e(TAG,"PROPERTY_ENTRY: "+new Gson().toJson(response));
             }
 
@@ -239,7 +232,8 @@ public class EstimoteNotificationManager {
     }
 
     private void sendExitPropertyRequest(Context context, String url, String appName){
-        mPropertyController.exitProperty(getUserId(context),url,getFCMToken(context), appName, mIMEINumber,
+        mPropertyController.exitProperty(mPreferenceUtil.getUserId(context),url,mPreferenceUtil.getFCMToken(context),
+                appName, mPreferenceUtil.mIMEINumber,
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
             public void response(PropertyExitResponse response) {
@@ -255,12 +249,12 @@ public class EstimoteNotificationManager {
 
     public void sendAddUserRequest(Context context, String userName, String appName){
         Log.e(TAG,"mUserName: "+userName);
-        Log.e(TAG,"getFCMToken(): "+getFCMToken(context));
+        Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"mAppName: "+appName);
-        Log.e(TAG,"mIMEINumber: "+mIMEINumber);
+        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.mIMEINumber);
 
-        mPropertyController.addUser(userName,"Android",getFCMToken(context),appName, mIMEINumber,
-                new ICallbackHandler<AddUserResponse>() {
+        mPropertyController.addUser(userName,"Android",mPreferenceUtil.getFCMToken(context),appName,
+                mPreferenceUtil.mIMEINumber,new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));

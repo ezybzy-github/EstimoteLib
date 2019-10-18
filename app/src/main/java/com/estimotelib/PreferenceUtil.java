@@ -10,16 +10,20 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class PreferenceUtil {
-    public static String mIMEINumber;
+    public String mIMEINumber;
 
-    public static HashMap<String, String> getMap(SharedPreferences pref)
+    public void PreferenceUtil(){
+
+    }
+
+    public HashMap<String, String> getMap(SharedPreferences pref)
     {
         HashMap<String, String> map= (HashMap<String, String>) pref.getAll();
         return map;
     }
 
     //user mute any notification then store here
-    public static void storeMutedUrl(Context context, String url)
+    public void storeMutedUrl(Context context, String url)
     {
         try
         {
@@ -44,7 +48,7 @@ public class PreferenceUtil {
     }
 
     //Get muted urls
-    public static boolean matchKeyFromMuteMap(Context context, String value)
+    public boolean matchKeyFromMuteMap(Context context, String value)
     {
         boolean urlMatch = false;
         SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS", Context.MODE_PRIVATE);
@@ -58,7 +62,7 @@ public class PreferenceUtil {
     }
 
     //Delete from preference
-    public static void deleteFromMutedUrl(Context context, String value){
+    public void deleteFromMutedUrl(Context context, String value){
         SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS", Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -79,7 +83,7 @@ public class PreferenceUtil {
     }
 
     //user mute specific url then notification should not be come before 30 days
-    public static boolean checkDate(Context context, String value)
+    public boolean checkDate(Context context, String value)
     {
         boolean dateMatch = false;
 
@@ -113,7 +117,7 @@ public class PreferenceUtil {
         return dateMatch;
     }
 
-    public static String getCurrentDateTime()
+    public String getCurrentDateTime()
     {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar calender = Calendar.getInstance(Locale.getDefault());
@@ -124,7 +128,7 @@ public class PreferenceUtil {
     }
 
     //store beacon id if user visit first time
-    public static void visitedBeacon(Context context, String beaconId)
+    public void visitedBeacon(Context context, String beaconId)
     {
         try
         {
@@ -151,7 +155,7 @@ public class PreferenceUtil {
         }
     }
 
-    public static boolean isBeaconNotificationReceivedInTwelveHours(Context context, final String beaconId) {
+    public boolean isBeaconNotificationReceivedInTwelveHours(Context context, final String beaconId) {
         try {
             SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON", Context.MODE_PRIVATE);
             HashMap<String, String> map= getMap(pref);
@@ -177,7 +181,7 @@ public class PreferenceUtil {
         return false;
     }
 
-    public static void deleteFromVisitedBeacon(Context context, String value){
+    public void deleteFromVisitedBeacon(Context context, String value){
         SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON", Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -197,7 +201,7 @@ public class PreferenceUtil {
         editor.commit();
     }
 
-    public static String getTime()
+    public String getTime()
     {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         Calendar calender = Calendar.getInstance(Locale.getDefault());
@@ -207,7 +211,7 @@ public class PreferenceUtil {
         return formattedTime;
     }
 
-    public static void saveBeaconEnterDetail(Context context, String deviceId){
+    public void saveBeaconEnterDetail(Context context, String deviceId){
         SharedPreferences pref= context.getSharedPreferences("ENTERED_BEACON", Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -226,7 +230,7 @@ public class PreferenceUtil {
         editor.commit();
     }
 
-    public static void saveBeaconExitDetail(Context context, String deviceId){
+    public void saveBeaconExitDetail(Context context, String deviceId){
         SharedPreferences pref= context.getSharedPreferences("EXIT_BEACON", Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
@@ -245,34 +249,34 @@ public class PreferenceUtil {
         editor.commit();
     }
 
-    public static SharedPreferences getPreference(Context context, String name){
+    public SharedPreferences getPreference(Context context, String name){
         return context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public static void getAppNameIMEINumber(String imeinumber){
+    public void getAppNameIMEINumber(String imeinumber){
         mIMEINumber = imeinumber;
     }
 
-    public static void saveFCMToken(Context context, String token){
+    public void saveFCMToken(Context context, String token){
         SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN", Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("TOKEN",token);
         spe.commit();
     }
 
-    public static String getFCMToken(Context context){
+    public String getFCMToken(Context context){
         SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN", Context.MODE_PRIVATE);
         return sp.getString("TOKEN","");
     }
 
-    public static void saveUserId(Context context, String UserId){
+    public void saveUserId(Context context, String UserId){
         SharedPreferences sp = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("UserId",UserId);
         spe.commit();
     }
 
-    public static String getUserId(Context context){
+    public String getUserId(Context context){
         SharedPreferences sp = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
         return sp.getString("UserId","");
     }

@@ -19,8 +19,6 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
-import static com.estimotelib.PreferenceUtil.storeMutedUrl;
-
 public class EstimoteLibUtil {
     private static String TAG = "EstimoteLibUtil";
 
@@ -29,9 +27,11 @@ public class EstimoteLibUtil {
     private EstimoteNotificationManager mNm;
     private boolean mIsMonitoringOn = false;
 
-    public NotificationManager notificationManager;
+    private NotificationManager notificationManager;
 
-    FCMNotificationManager mFireBaseNotificationManager;
+    private FCMNotificationManager mFireBaseNotificationManager;
+
+    private PreferenceUtil mPreferenceUtil;
 
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
 
@@ -39,6 +39,7 @@ public class EstimoteLibUtil {
         Log.e(TAG,"TOKEN: "+appToken);
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
         notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mPreferenceUtil = new PreferenceUtil();
     }
 
     public EstimoteLibUtil(){
@@ -138,7 +139,7 @@ public class EstimoteLibUtil {
         builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                storeMutedUrl(mContext,value);
+                mPreferenceUtil.storeMutedUrl(mContext,value);
             }
         });
 
