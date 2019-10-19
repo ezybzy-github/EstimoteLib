@@ -1,5 +1,7 @@
 package com.estimotelib.fcm;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import com.estimotelib.EstimoteLibUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -34,9 +36,9 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
             return;
 
         try {
-            AppName = mUtil.returnAppNameForNotification(getApplicationContext());
+            AppName = getApplicationName(getApplicationContext());
             Log.e(TAG,"AppName: "+AppName);
-            reference = mUtil.returnClassReferenceForNotification(getApplicationContext(),AppName);
+            reference = getClassReferenceName(getApplicationContext(),AppName);
             Log.e(TAG,"ClassReference: "+reference);
         }catch (Exception e){
             e.printStackTrace();
@@ -68,5 +70,15 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
 
         mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,AppName,url,reference);
+    }
+
+    private String getApplicationName(Context context){
+        SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
+        return sp.getString("appName","");
+    }
+
+    public String getClassReferenceName(Context context,String appName){
+        SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+        return sp.getString(appName,"");
     }
 }

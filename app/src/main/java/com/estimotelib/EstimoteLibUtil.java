@@ -69,17 +69,6 @@ public class EstimoteLibUtil {
     public void setClassReferenceForNotification(Context ctx,Class reference,String AppName){
         mPreferenceUtil.saveApplicationName(ctx,AppName);
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
-
-        Log.e(TAG,"className: "+mPreferenceUtil.getClassReferenceName(ctx,AppName));
-        Log.e(TAG,"appName: "+mPreferenceUtil.getApplicationName(ctx));
-    }
-
-    public String returnClassReferenceForNotification(Context ctx,String AppName){
-        return mPreferenceUtil.getClassReferenceName(ctx,AppName);
-    }
-
-    public String returnAppNameForNotification(Context ctx){
-        return mPreferenceUtil.getApplicationName(ctx);
     }
 
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
