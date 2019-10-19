@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
@@ -53,7 +55,10 @@ public class EstimoteLibUtil {
 
     public void setBeaconMessageListener(OnBeaconMessageListener listener) {
         if(mNm != null) {
+            Log.e(TAG,"EstimoteNotificationManager not null");
             mNm.setBeaconMessageListener(listener);
+        }else{
+            Log.e(TAG,"EstimoteNotificationManager is null");
         }
     }
 
