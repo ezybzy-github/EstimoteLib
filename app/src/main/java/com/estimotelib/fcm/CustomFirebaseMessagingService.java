@@ -58,7 +58,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"title: "+title);
         Log.e(TAG,"message: "+msg);
 
-        mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,"RealEstate",url,null);
+        mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,mUtil.returnAppNameForNotification(),url,
+                mUtil.returnClassReferenceForNotification());
 
 //        EstimoteLibUtil.mFCMNotificationManager.
 //        Intent intent = new Intent("NewNotification");

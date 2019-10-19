@@ -31,6 +31,10 @@ public class EstimoteLibUtil {
 
     private PreferenceUtil mPreferenceUtil;
 
+    private static Class mRefClass;
+
+    private static String mAppName;
+
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
 
         Log.e(TAG,"ID: "+appId);
@@ -64,6 +68,19 @@ public class EstimoteLibUtil {
         if(mNm != null) {
             mNm.removeBeaconMessageListener();
         }
+    }
+
+    public void setClassReferenceForNotification(Class reference,String AppName){
+        mRefClass = reference;
+        mAppName = AppName;
+    }
+
+    public Class returnClassReferenceForNotification(){
+        return mRefClass;
+    }
+
+    public String returnAppNameForNotification(){
+        return mAppName;
     }
 
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
