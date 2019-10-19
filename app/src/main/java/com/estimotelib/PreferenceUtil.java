@@ -261,6 +261,7 @@ public class PreferenceUtil {
         SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN", Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("TOKEN",token);
+        spe.apply();
         spe.commit();
     }
 
@@ -273,11 +274,38 @@ public class PreferenceUtil {
         SharedPreferences sp = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("UserId",UserId);
+        spe.apply();
         spe.commit();
     }
 
     public String getUserId(Context context){
         SharedPreferences sp = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
         return sp.getString("UserId","");
+    }
+
+    public void saveApplicationName(Context context,String appName){
+        SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString("appName",appName);
+        spe.apply();
+        spe.commit();
+    }
+
+    public String getApplicationName(Context context){
+        SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
+        return sp.getString("appName","");
+    }
+
+    public void SaveClassReferenceForNotification(Context context,String appName,Class referenceClass){
+        SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString(appName,referenceClass.getName());
+        spe.apply();
+        spe.commit();
+    }
+
+    public String getClassReferenceName(Context context){
+        SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+        return sp.getString(getApplicationName(context),"");
     }
 }

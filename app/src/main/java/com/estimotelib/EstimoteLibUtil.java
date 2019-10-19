@@ -31,10 +31,6 @@ public class EstimoteLibUtil {
 
     private PreferenceUtil mPreferenceUtil;
 
-    private static Class mRefClass;
-
-    private static String mAppName;
-
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
 
         Log.e(TAG,"ID: "+appId);
@@ -70,17 +66,23 @@ public class EstimoteLibUtil {
         }
     }
 
-    public void setClassReferenceForNotification(Class reference,String AppName){
-        mRefClass = reference;
-        mAppName = AppName;
+    public void setClassReferenceForNotification(Context ctx,Class reference,String AppName){
+        mPreferenceUtil.saveApplicationName(ctx,AppName);
+        mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
     }
 
-    public Class returnClassReferenceForNotification(){
-        return mRefClass;
+    public Class returnClassReferenceForNotification(Context ctx){
+        Class reference = null;
+        try {
+            reference = Class.forName(mPreferenceUtil.getClassReferenceName(ctx));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return reference;
     }
 
-    public String returnAppNameForNotification(){
-        return mAppName;
+    public String returnAppNameForNotification(Context ctx){
+        return mPreferenceUtil.getApplicationName(ctx);
     }
 
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
