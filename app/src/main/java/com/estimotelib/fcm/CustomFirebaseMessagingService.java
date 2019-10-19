@@ -38,9 +38,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
         try {
             AppName = mPreferenceUtil.getApplicationName(getApplicationContext());
-            Log.e(TAG,"AppName: "+AppName);
             reference = mPreferenceUtil.getClassReferenceName(getApplicationContext(),AppName);
-            Log.e(TAG,"ClassReference: "+reference);
         }catch (Exception e){
             e.printStackTrace();
         }

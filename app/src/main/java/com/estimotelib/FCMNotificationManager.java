@@ -14,6 +14,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -56,7 +59,7 @@ public class FCMNotificationManager {
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             builder.setContentTitle(appName)                            // required
                     .setSmallIcon(R.drawable.ic_lib_notifications)   // required
@@ -76,7 +79,7 @@ public class FCMNotificationManager {
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             builder.setContentTitle(appName)                            // required
                     .setSmallIcon(R.drawable.ic_lib_notifications)   // required
@@ -94,11 +97,97 @@ public class FCMNotificationManager {
 
     public void createPictureTypeNotification(Context context, String title, String message, String imageUrl,
                                               String appName, String url, String className){
-        new generatePictureStyleNotification(context,title, message,
-                imageUrl,appName,url,className).execute();
+        try {
+            createPictureStyleNotification(context,title, message,imageUrl,appName,url,className);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        new generatePictureStyleNotification(context,title, message,
+//                imageUrl,appName,url,className).execute();
     }
 
-    public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
+    private void createPictureStyleNotification(Context mContext, String title, String message,
+                                                String imageUrl, String appName, String url, String className) throws IOException {
+        PendingIntent pendingIntent;
+        NotificationCompat.Builder builder;
+        if (notificationManager == null) {
+            notificationManager = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel mChannel = notificationManager.getNotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id));
+            if (mChannel == null) {
+                mChannel = new NotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id),
+                        "Things near you", importance);
+                mChannel.enableVibration(true);
+                mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                notificationManager.createNotificationChannel(mChannel);
+            }
+            builder = new NotificationCompat.Builder(mContext,
+                    mContext.getResources().getString(R.string.default_notification_channel_id));
+
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(mContext, className));
+            intent.putExtra("WEB_VIEW_URL", url);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            builder.setContentTitle(appName)                            // required
+                    .setSmallIcon(R.drawable.ic_lib_notifications)   // required
+                    .setContentText(message) // required
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setTicker(title)
+                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                    .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())
+                    .setStyle(new NotificationCompat.BigPictureStyle()
+                    //This one is same as large icon but it wont show when its expanded that's why we again setting
+                    .bigLargeIcon(Picasso.with(mContext).load(imageUrl).get())
+                    //This is Big Banner image
+                    .bigPicture(Picasso.with(mContext).load(imageUrl).get())
+                    //When Notification expanded title and content text
+                    .setBigContentTitle(title)
+                    .setSummaryText(message));
+        }
+        else {
+            builder = new NotificationCompat.Builder(mContext,
+                    mContext.getResources().getString(R.string.default_notification_channel_id));
+
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(mContext, className));
+
+            intent.putExtra("WEB_VIEW_URL", url);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            builder.setContentTitle(appName)                            // required
+                    .setSmallIcon(R.drawable.ic_lib_notifications)   // required
+                    .setContentText(message) // required
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setTicker(title)
+                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())
+                    .setStyle(new NotificationCompat.BigPictureStyle()
+                            //This one is same as large icon but it wont show when its expanded that's why we again setting
+                            .bigLargeIcon(Picasso.with(mContext).load(imageUrl).get())
+                            //This is Big Banner image
+                            .bigPicture(Picasso.with(mContext).load(imageUrl).get())
+                            //When Notification expanded title and content text
+                            .setBigContentTitle(title)
+                            .setSummaryText(message));
+        }
+        Notification notification = builder.build();
+        notificationManager.notify(generateRandomNotifyId(), notification);
+    }
+
+    /*public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
         private Context mContext;
         private String title, message, imageUrl,appName,url,className;
@@ -164,7 +253,7 @@ public class FCMNotificationManager {
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 builder.setContentTitle(appName)                            // required
                         .setSmallIcon(R.drawable.ic_lib_notifications)   // required
@@ -186,7 +275,7 @@ public class FCMNotificationManager {
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 builder.setContentTitle(appName)                            // required
                         .setSmallIcon(R.drawable.ic_lib_notifications)   // required
@@ -202,7 +291,7 @@ public class FCMNotificationManager {
             Notification notification = builder.build();
             notificationManager.notify(generateRandomNotifyId(), notification);
         }
-    }
+    }*/
 
     public static boolean isAppIsInBackground(Context context) {
         boolean isInBackground = true;
