@@ -71,7 +71,7 @@ public class EstimoteLibUtil {
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
 
         Log.e(TAG,"className: "+mPreferenceUtil.getClassReferenceName(ctx));
-        Log.e(TAG,"appName: "+mPreferenceUtil.getClassReferenceName(ctx));
+        Log.e(TAG,"appName: "+mPreferenceUtil.getApplicationName(ctx));
     }
 
     public Class returnClassReferenceForNotification(Context ctx){

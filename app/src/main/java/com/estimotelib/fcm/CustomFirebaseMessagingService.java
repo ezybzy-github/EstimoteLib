@@ -19,6 +19,9 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         // TODO Auto-generated method stub
         super.onCreate();
         mUtil = new EstimoteLibUtil();
+
+        Log.e(TAG,"AppName: "+mUtil.returnAppNameForNotification(getApplicationContext()));
+        Log.e(TAG,"ClassReference: "+mUtil.returnClassReferenceForNotification(getApplicationContext()));
     }
 
     @Override
@@ -34,9 +37,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
             JSONObject dataJSON = new JSONObject(data);
             Log.e("onMessageReceived-->","" + data);
             processNotification(dataJSON);
-
-            Log.e(TAG,"AppName: "+mUtil.returnAppNameForNotification(getApplicationContext()));
-            Log.e(TAG,"ClassReference: "+mUtil.returnClassReferenceForNotification(getApplicationContext()));
 
         } catch (Exception e) {
             Log.e("onMessageReceived-->","" + e.getMessage());
