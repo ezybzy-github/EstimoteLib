@@ -49,7 +49,7 @@ public class EstimoteNotificationManager {
         mPropertyController = new PropertyController(context);
 
         mPreferenceUtil = new PreferenceUtil();
-        sendPropertyEntryRequest(context,value,"Estimote");
+        sendPropertyEntryRequest(context,"https://www.google.com/","Estimote");
     }
 
     public static void setAlertDialogListener(OnBeaconMessageListener listener) {
