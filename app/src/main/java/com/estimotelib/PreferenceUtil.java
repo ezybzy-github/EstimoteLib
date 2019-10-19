@@ -294,7 +294,6 @@ public class PreferenceUtil {
 
     public String getApplicationName(Context context){
         SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
-        Log.e("PreferenceUtil","appName: "+sp.getString("appName",""));
         return sp.getString("appName","");
     }
 
@@ -308,7 +307,6 @@ public class PreferenceUtil {
 
     public String getClassReferenceName(Context context){
         SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
-        Log.e("PreferenceUtil","ClassReferenceName: "+sp.getString(getApplicationName(context),""));
         return sp.getString(getApplicationName(context),"");
     }
 }
