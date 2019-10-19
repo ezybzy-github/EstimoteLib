@@ -1,6 +1,5 @@
 package com.estimotelib;
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,19 +8,10 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-
 import com.squareup.picasso.Picasso;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
@@ -102,8 +92,6 @@ public class FCMNotificationManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        new generatePictureStyleNotification(context,title, message,
-//                imageUrl,appName,url,className).execute();
     }
 
     private void createPictureStyleNotification(Context mContext, String title, String message,
@@ -186,112 +174,6 @@ public class FCMNotificationManager {
         Notification notification = builder.build();
         notificationManager.notify(generateRandomNotifyId(), notification);
     }
-
-    /*public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
-
-        private Context mContext;
-        private String title, message, imageUrl,appName,url,className;
-
-        public generatePictureStyleNotification(Context context, String title, String message,
-                                                String imageUrl, String appName, String url, String className) {
-            super();
-            this.mContext = context;
-            this.title = title;
-            this.message = message;
-            this.imageUrl = imageUrl;
-            this.appName = appName;
-            this.url = url;
-            this.className = className;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-
-            InputStream in;
-            try {
-                URL url = new URL(this.imageUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                in = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(in);
-                return myBitmap;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-
-            PendingIntent pendingIntent;
-            NotificationCompat.Builder builder;
-            if (notificationManager == null) {
-                notificationManager = (NotificationManager)mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                int importance = NotificationManager.IMPORTANCE_HIGH;
-
-                NotificationChannel mChannel = notificationManager.getNotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id));
-                if (mChannel == null) {
-                    mChannel = new NotificationChannel(mContext.getResources().getString(R.string.default_notification_channel_id),
-                            "Things near you", importance);
-                    mChannel.enableVibration(true);
-                    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                    notificationManager.createNotificationChannel(mChannel);
-                }
-                builder = new NotificationCompat.Builder(mContext,
-                        mContext.getResources().getString(R.string.default_notification_channel_id));
-
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName(mContext, className));
-                intent.putExtra("WEB_VIEW_URL", url);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                builder.setContentTitle(appName)                            // required
-                        .setSmallIcon(R.drawable.ic_lib_notifications)   // required
-                        .setContentText(message) // required
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent)
-                        .setTicker(title)
-                        .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                        .setLargeIcon(result);
-            }
-            else {
-                builder = new NotificationCompat.Builder(mContext,
-                        mContext.getResources().getString(R.string.default_notification_channel_id));
-
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName(mContext, className));
-
-                intent.putExtra("WEB_VIEW_URL", url);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-                pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                builder.setContentTitle(appName)                            // required
-                        .setSmallIcon(R.drawable.ic_lib_notifications)   // required
-                        .setContentText(message) // required
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent)
-                        .setTicker(title)
-                        .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setLargeIcon(result);
-            }
-            Notification notification = builder.build();
-            notificationManager.notify(generateRandomNotifyId(), notification);
-        }
-    }*/
 
     public static boolean isAppIsInBackground(Context context) {
         boolean isInBackground = true;

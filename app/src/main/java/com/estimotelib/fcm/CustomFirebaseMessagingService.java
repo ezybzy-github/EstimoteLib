@@ -1,7 +1,9 @@
 package com.estimotelib.fcm;
 
+import android.content.Context;
 import android.util.Log;
 import com.estimotelib.EstimoteLibUtil;
+import com.estimotelib.FCMNotificationManager;
 import com.estimotelib.PreferenceUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -12,21 +14,21 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
 
-    EstimoteLibUtil mUtil;
-
     String AppName;
 
     String reference;
 
     PreferenceUtil mPreferenceUtil;
 
+    FCMNotificationManager mFCMNotificationManager;
+
     @Override
     public void onCreate()
     {
         // TODO Auto-generated method stub
         super.onCreate();
-        mUtil = new EstimoteLibUtil();
         mPreferenceUtil = new PreferenceUtil();
+        mFCMNotificationManager = new FCMNotificationManager(getApplicationContext());
     }
 
     @Override
@@ -67,7 +69,16 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"title: "+title);
         Log.e(TAG,"message: "+msg);
 
+        showFCMNotification(getApplicationContext(),title,msg,Image,AppName,url,reference);
+    }
 
-        mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,AppName,url,reference);
+    private void showFCMNotification(Context ctx, String title, String message, String image, String appName, String url,
+                                    String className){
+        if(!image.equalsIgnoreCase("")){
+            mFCMNotificationManager.
+                    createPictureTypeNotification(ctx,title,message,image,appName,url, className);
+        }else{
+            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,className);
+        }
     }
 }

@@ -27,8 +27,6 @@ public class EstimoteLibUtil {
 
     private NotificationManager notificationManager;
 
-    public static FCMNotificationManager mFCMNotificationManager;
-
     private PreferenceUtil mPreferenceUtil;
 
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
@@ -38,7 +36,6 @@ public class EstimoteLibUtil {
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
         notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mPreferenceUtil = new PreferenceUtil();
-        mFCMNotificationManager = new FCMNotificationManager(applicationContext);
     }
 
     public EstimoteLibUtil(){
@@ -69,16 +66,6 @@ public class EstimoteLibUtil {
     public void setClassReferenceForNotification(Context ctx,Class reference,String AppName){
         mPreferenceUtil.saveApplicationName(ctx,AppName);
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
-    }
-
-    public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
-                                    String className){
-        if(!image.equalsIgnoreCase("")){
-            mFCMNotificationManager.
-                    createPictureTypeNotification(ctx,title,message,image,appName,url, className);
-        }else{
-            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,className);
-        }
     }
 
     public void startMonitoring(final Activity context, final Class classRef,
