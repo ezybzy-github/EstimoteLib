@@ -217,6 +217,10 @@ public class EstimoteNotificationManager {
     }
 
     private void sendPropertyEntryRequest(final Context context, String url, String appName){
+        Log.e(TAG,"FCMToken: "+mPreferenceUtil.getFCMToken(context));
+        Log.e(TAG,"URL: "+url);
+        Log.e(TAG,"App name: "+appName);
+        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.mIMEINumber);
         mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
                 mPreferenceUtil.mIMEINumber, new ICallbackHandler<PropertyVisitResponse>() {
             @Override
@@ -227,7 +231,7 @@ public class EstimoteNotificationManager {
 
             @Override
             public void isError(String errorMsg) {
-
+                Log.e(TAG,"PROPERTY_ENTRY ERROR: "+errorMsg);
             }
         });
     }
