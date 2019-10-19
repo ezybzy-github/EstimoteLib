@@ -174,9 +174,7 @@ public class FCMNotificationManager {
                         .setContentIntent(pendingIntent)
                         .setTicker(title)
                         .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                        .setLargeIcon(result)
-                        .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(result));
+                        .setLargeIcon(result);
             }
             else {
                 builder = new NotificationCompat.Builder(mContext,
@@ -199,9 +197,7 @@ public class FCMNotificationManager {
                         .setTicker(title)
                         .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                         .setPriority(Notification.PRIORITY_HIGH)
-                        .setLargeIcon(result)
-                        .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(result));
+                        .setLargeIcon(result);
             }
             Notification notification = builder.build();
             notificationManager.notify(generateRandomNotifyId(), notification);
