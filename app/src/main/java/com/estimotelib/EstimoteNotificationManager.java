@@ -49,7 +49,6 @@ public class EstimoteNotificationManager {
         mPropertyController = new PropertyController(context);
 
         mPreferenceUtil = new PreferenceUtil();
-        sendPropertyEntryRequest(context,"https://ankita_developer.com/","Estimote");
     }
 
     public static void setAlertDialogListener(OnBeaconMessageListener listener) {
