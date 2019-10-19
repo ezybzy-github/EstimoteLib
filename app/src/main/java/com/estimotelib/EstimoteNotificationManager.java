@@ -40,7 +40,6 @@ public class EstimoteNotificationManager {
     private PropertyController mPropertyController;
     private boolean isFirstTime = false;
     private OnBeaconMessageListener mBeaconMessageListener;
-    private static OnBeaconMessageListener mStaticListener;
 
     private PreferenceUtil mPreferenceUtil;
 
@@ -49,14 +48,6 @@ public class EstimoteNotificationManager {
         mPropertyController = new PropertyController(context);
 
         mPreferenceUtil = new PreferenceUtil();
-    }
-
-    public static void setAlertDialogListener(OnBeaconMessageListener listener) {
-        mStaticListener = listener;
-    }
-
-    public static void removeAlertDialogListner(OnBeaconMessageListener listener) {
-        mStaticListener = null;
     }
 
     public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
@@ -145,9 +136,9 @@ public class EstimoteNotificationManager {
             }
 
             if(!isPropertyVisited) {
-                if(!isFirstTime && mStaticListener != null){
+                if(!isFirstTime && mBeaconMessageListener != null){
                     isFirstTime = true;
-                    mStaticListener.onMessageReceived(key, value);
+                    mBeaconMessageListener.onMessageReceived(key, value);
                 }else{
                     NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
                             value, randomNotificationId(),classRef,flag);

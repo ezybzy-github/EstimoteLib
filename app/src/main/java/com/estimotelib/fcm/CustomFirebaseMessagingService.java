@@ -2,7 +2,6 @@ package com.estimotelib.fcm;
 
 import android.content.Context;
 import android.util.Log;
-import com.estimotelib.EstimoteLibUtil;
 import com.estimotelib.FCMNotificationManager;
 import com.estimotelib.PreferenceUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
