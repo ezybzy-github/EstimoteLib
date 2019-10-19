@@ -299,4 +299,14 @@ public class PreferenceUtil {
         spe.apply();
         spe.commit();
     }
+
+    public String getApplicationName(Context context){
+        SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
+        return sp.getString("appName","");
+    }
+
+    public String getClassReferenceName(Context context,String appName){
+        SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+        return sp.getString(appName,"");
+    }
 }
