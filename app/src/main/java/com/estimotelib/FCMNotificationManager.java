@@ -53,11 +53,7 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            if(!isAppIsInBackground(context)){
-                intent.setComponent(new ComponentName(context, classRef));
-            }else {
-                intent.setClass(context, classRef);
-            }
+            intent.setComponent(new ComponentName(context, classRef));
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -77,11 +73,7 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            if(!isAppIsInBackground(context)){
-                intent.setComponent(new ComponentName(context, classRef));
-            }else {
-                intent.setClass(context, classRef);
-            }
+            intent.setComponent(new ComponentName(context, classRef));
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -171,11 +163,7 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                if(!isAppIsInBackground(mContext)){
-                    intent.setComponent(new ComponentName(mContext, classRef));
-                }else {
-                    intent.setClass(mContext, classRef);
-                }
+                intent.setComponent(new ComponentName(mContext, classRef));
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -198,11 +186,7 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                if(!isAppIsInBackground(mContext)){
-                    intent.setComponent(new ComponentName(mContext, classRef));
-                }else {
-                    intent.setClass(mContext, classRef);
-                }
+                intent.setComponent(new ComponentName(mContext, classRef));
 
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
