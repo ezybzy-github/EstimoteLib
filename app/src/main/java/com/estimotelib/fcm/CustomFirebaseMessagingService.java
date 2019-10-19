@@ -15,7 +15,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
     String AppName;
 
-    Class reference;
+    String reference;
 
     @Override
     public void onCreate()

@@ -31,7 +31,7 @@ public class FCMNotificationManager {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void createNotification(String title, Context context, String msg, String url, String appName, Class classRef) {
+    public void createNotification(String title, Context context, String msg, String url, String appName, String className) {
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
         if (notificationManager == null) {
@@ -52,7 +52,7 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(context, classRef));
+            intent.setComponent(new ComponentName(context, className));
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -72,7 +72,7 @@ public class FCMNotificationManager {
                     context.getResources().getString(R.string.default_notification_channel_id));
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName(context, classRef));
+            intent.setComponent(new ComponentName(context, className));
             intent.putExtra("WEB_VIEW_URL", url);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -93,19 +93,18 @@ public class FCMNotificationManager {
     }
 
     public void createPictureTypeNotification(Context context, String title, String message, String imageUrl,
-                                              String appName, String url, Class classRef){
+                                              String appName, String url, String className){
         new generatePictureStyleNotification(context,title, message,
-                imageUrl,appName,url,classRef).execute();
+                imageUrl,appName,url,className).execute();
     }
 
     public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
         private Context mContext;
-        private String title, message, imageUrl,appName,url;
-        private Class classRef;
+        private String title, message, imageUrl,appName,url,className;
 
         public generatePictureStyleNotification(Context context, String title, String message,
-                                                String imageUrl, String appName, String url, Class classRef) {
+                                                String imageUrl, String appName, String url, String className) {
             super();
             this.mContext = context;
             this.title = title;
@@ -113,7 +112,7 @@ public class FCMNotificationManager {
             this.imageUrl = imageUrl;
             this.appName = appName;
             this.url = url;
-            this.classRef = classRef;
+            this.className = className;
         }
 
         @Override
@@ -161,7 +160,7 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(mContext, classRef));
+                intent.setComponent(new ComponentName(mContext, className));
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -184,7 +183,7 @@ public class FCMNotificationManager {
                         mContext.getResources().getString(R.string.default_notification_channel_id));
 
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(mContext, classRef));
+                intent.setComponent(new ComponentName(mContext, className));
 
                 intent.putExtra("WEB_VIEW_URL", url);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -74,14 +74,8 @@ public class EstimoteLibUtil {
         Log.e(TAG,"appName: "+mPreferenceUtil.getApplicationName(ctx));
     }
 
-    public Class returnClassReferenceForNotification(Context ctx,String AppName){
-        Class reference = null;
-        try {
-            reference = Class.forName(mPreferenceUtil.getClassReferenceName(ctx,AppName));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return reference;
+    public String returnClassReferenceForNotification(Context ctx,String AppName){
+        return mPreferenceUtil.getClassReferenceName(ctx,AppName);
     }
 
     public String returnAppNameForNotification(Context ctx){
@@ -89,12 +83,12 @@ public class EstimoteLibUtil {
     }
 
     public void showFCMNotification(Context ctx,String title, String message, String image, String appName, String url,
-                                    Class refClass){
+                                    String className){
         if(!image.equalsIgnoreCase("")){
             mFCMNotificationManager.
-                    createPictureTypeNotification(ctx,title,message,image,appName,url, refClass);
+                    createPictureTypeNotification(ctx,title,message,image,appName,url, className);
         }else{
-            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,refClass);
+            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,className);
         }
     }
 
