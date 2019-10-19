@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 
 public class FCMNotificationManager {
     public static final String TAG = "FCMNotificationManager";
@@ -31,8 +32,6 @@ public class FCMNotificationManager {
     }
 
     public void createNotification(String title, Context context, String msg, String url, String appName, Class classRef) {
-
-        final int NOTIFY_ID = 0; // ID of notification
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
         if (notificationManager == null) {
@@ -90,7 +89,7 @@ public class FCMNotificationManager {
                     .setPriority(Notification.PRIORITY_HIGH);
         }
         Notification notification = builder.build();
-        notificationManager.notify(NOTIFY_ID, notification);
+        notificationManager.notify(generateRandomNotifyId(), notification);
     }
 
     public void createPictureTypeNotification(Context context, String title, String message, String imageUrl,
@@ -142,7 +141,6 @@ public class FCMNotificationManager {
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
 
-            final int NOTIFY_ID = 0; // ID of notification
             PendingIntent pendingIntent;
             NotificationCompat.Builder builder;
             if (notificationManager == null) {
@@ -207,7 +205,7 @@ public class FCMNotificationManager {
                                 .bigPicture(result));
             }
             Notification notification = builder.build();
-            notificationManager.notify(NOTIFY_ID, notification);
+            notificationManager.notify(generateRandomNotifyId(), notification);
         }
     }
 
@@ -234,5 +232,13 @@ public class FCMNotificationManager {
         }
 
         return isInBackground;
+    }
+
+    private int generateRandomNotifyId(){
+        int min = 10;
+        int max = 80;
+        Random random = new Random();
+        int randomNumber = random.nextInt(max-min) + 65;
+        return randomNumber;
     }
 }
