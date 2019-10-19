@@ -3,6 +3,8 @@ package com.estimotelib.fcm;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.estimotelib.EstimoteLibUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONObject;
@@ -12,14 +14,17 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
 
-    private LocalBroadcastManager broadcaster;
+//    private LocalBroadcastManager broadcaster;
+
+    EstimoteLibUtil mUtil;
 
     @Override
     public void onCreate()
     {
         // TODO Auto-generated method stub
         super.onCreate();
-        broadcaster = LocalBroadcastManager.getInstance(this);
+        mUtil = new EstimoteLibUtil();
+//        broadcaster = LocalBroadcastManager.getInstance(this);
     }
 
     @Override
@@ -53,11 +58,14 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"title: "+title);
         Log.e(TAG,"message: "+msg);
 
-        Intent intent = new Intent("NewNotification");
-        intent.putExtra("image", Image);
-        intent.putExtra("url", url);
-        intent.putExtra("title", title);
-        intent.putExtra("message", msg);
-        broadcaster.sendBroadcast(intent);
+        mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,"RealEstate",url,null);
+
+//        EstimoteLibUtil.mFCMNotificationManager.
+//        Intent intent = new Intent("NewNotification");
+//        intent.putExtra("image", Image);
+//        intent.putExtra("url", url);
+//        intent.putExtra("title", title);
+//        intent.putExtra("message", msg);
+//        broadcaster.sendBroadcast(intent);
     }
 }

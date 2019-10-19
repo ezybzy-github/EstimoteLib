@@ -7,11 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
-
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
-import com.estimotelib.interfaces.OnFCMNotificationListener;
 import com.estimotelib.interfaces.OnBeaconMessageListener;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class EstimoteLibUtil {
 
     private NotificationManager notificationManager;
 
-    private FCMNotificationManager mFCMNotificationManager;
+    public static FCMNotificationManager mFCMNotificationManager;
 
     private PreferenceUtil mPreferenceUtil;
 
