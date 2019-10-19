@@ -70,14 +70,14 @@ public class EstimoteLibUtil {
         mPreferenceUtil.saveApplicationName(ctx,AppName);
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
 
-        Log.e(TAG,"className: "+mPreferenceUtil.getClassReferenceName(ctx));
+        Log.e(TAG,"className: "+mPreferenceUtil.getClassReferenceName(ctx,AppName));
         Log.e(TAG,"appName: "+mPreferenceUtil.getApplicationName(ctx));
     }
 
-    public Class returnClassReferenceForNotification(Context ctx){
+    public Class returnClassReferenceForNotification(Context ctx,String AppName){
         Class reference = null;
         try {
-            reference = Class.forName(mPreferenceUtil.getClassReferenceName(ctx));
+            reference = Class.forName(mPreferenceUtil.getClassReferenceName(ctx,AppName));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

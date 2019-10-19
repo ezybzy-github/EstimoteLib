@@ -305,8 +305,8 @@ public class PreferenceUtil {
         spe.commit();
     }
 
-    public String getClassReferenceName(Context context){
+    public String getClassReferenceName(Context context,String appName){
         SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
-        return sp.getString(getApplicationName(context),"");
+        return sp.getString(appName,"");
     }
 }

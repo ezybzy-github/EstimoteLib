@@ -13,6 +13,10 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
     EstimoteLibUtil mUtil;
 
+    String AppName;
+
+    Class reference;
+
     @Override
     public void onCreate()
     {
@@ -20,8 +24,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         super.onCreate();
         mUtil = new EstimoteLibUtil();
 
-        Log.e(TAG,"AppName: "+mUtil.returnAppNameForNotification(getApplicationContext()));
-        Log.e(TAG,"ClassReference: "+mUtil.returnClassReferenceForNotification(getApplicationContext()));
     }
 
     @Override
@@ -30,6 +32,15 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 
         if (remoteMessage == null)
             return;
+
+        try {
+            AppName = mUtil.returnAppNameForNotification(getApplicationContext());
+            Log.e(TAG,"AppName: "+AppName);
+            reference = mUtil.returnClassReferenceForNotification(getApplicationContext(),AppName);
+            Log.e(TAG,"ClassReference: "+reference);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         // Check if message contains a data payload.
         Map<String, String> data = remoteMessage.getData();
@@ -56,8 +67,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"message: "+msg);
 
 
-        mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,
-                mUtil.returnAppNameForNotification(getApplicationContext()),url,
-                mUtil.returnClassReferenceForNotification(getApplicationContext()));
+        mUtil.showFCMNotification(getApplicationContext(),title,msg,Image,AppName,url,reference);
     }
 }
