@@ -98,9 +98,9 @@ public class EstimoteLibUtil {
                         mPreferenceUtil.saveIdFromServer(context, String.valueOf(response.getId()));
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
 
-                        if(response.getId() != null){
-                            SendTokenRefreshRequest(context,String.valueOf(response.getId()));
-                        }
+//                        if(response.getId() != null){
+//                            SendTokenRefreshRequest(context,String.valueOf(response.getId()));
+//                        }
 
                         mNm.sendPropertyEntryRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
                         mNm.sendExitPropertyRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
@@ -114,7 +114,6 @@ public class EstimoteLibUtil {
     }
 
     private void SendTokenRefreshRequest(Context context,String userId) {
-        Log.e(TAG,"UPDATE_USER: ");
         Log.e(TAG,"TOKEN_UPDATE: ");
         Log.e(TAG,"fireBaseId: "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"getUserId: "+userId);
