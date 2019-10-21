@@ -4,14 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class PreferenceUtil {
-    public String mIMEINumber;
 
     public void PreferenceUtil(){
 
@@ -254,8 +259,17 @@ public class PreferenceUtil {
         return context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public void getAppNameIMEINumber(String imeinumber){
-        mIMEINumber = imeinumber;
+    public void SaveIMEINumber(Context context,String imeinumber){
+        SharedPreferences sp = context.getSharedPreferences("IMEI_NUMBER", Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString("IMEINumber",imeinumber);
+        spe.apply();
+        spe.commit();
+    }
+
+    public String getIMEINumber(Context context){
+        SharedPreferences sp = context.getSharedPreferences("IMEI_NUMBER", Context.MODE_PRIVATE);
+        return sp.getString("IMEINumber","");
     }
 
     public void saveFCMToken(Context context, String token){
@@ -292,21 +306,45 @@ public class PreferenceUtil {
         spe.commit();
     }
 
-    public void SaveClassReferenceForNotification(Context context,String appName,Class referenceClass){
-        SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
-        SharedPreferences.Editor spe = sp.edit();
-        spe.putString(appName,referenceClass.getName());
-        spe.apply();
-        spe.commit();
-    }
-
     public String getApplicationName(Context context){
         SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
         return sp.getString("appName","");
     }
 
+    public void SaveClassReferenceForNotification(Context context,String appName,Class referenceClass){
+        try{
+            SharedPreferences pref = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+            HashMap<String, String> map = getMap(pref);
+            if(!map.containsKey(appName))
+            {
+                map.put(appName, referenceClass.getName());
+            }
+
+            //Use url as map key and current date as value
+            SharedPreferences.Editor editor= pref.edit();
+
+            for (String s : map.keySet()) {
+                editor.putString(s, map.get(s));
+            }
+
+            editor.apply();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public String getClassReferenceName(Context context,String appName){
-        SharedPreferences sp = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
-        return sp.getString(appName,"");
+        String className = null;
+        try{
+            SharedPreferences pref = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+            HashMap<String, String> map = getMap(pref);
+            if(map.containsKey(appName))
+            {
+                className = pref.getString(appName,"");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return className;
     }
 }

@@ -24,7 +24,7 @@ public class FCMNotificationManager {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void createNotification(String title, Context context, String msg, String url, String appName, String className) {
+    public void createNotification(String title, Context context, String msg, String url, String className) {
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
         if (notificationManager == null) {
@@ -51,13 +51,12 @@ public class FCMNotificationManager {
 
             pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            builder.setContentTitle(appName)                            // required
+            builder.setContentTitle(title)                            // required
                     .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                     .setContentText(msg) // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
-                    .setTicker(title)
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         }
         else {
@@ -71,13 +70,12 @@ public class FCMNotificationManager {
 
             pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            builder.setContentTitle(appName)                            // required
+            builder.setContentTitle(title)                            // required
                     .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                     .setContentText(msg) // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
-                    .setTicker(title)
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                     .setPriority(Notification.PRIORITY_HIGH);
         }
@@ -86,16 +84,16 @@ public class FCMNotificationManager {
     }
 
     public void createPictureTypeNotification(Context context, String title, String message, String imageUrl,
-                                              String appName, String url, String className){
+                                              String url, String className){
         try {
-            createPictureStyleNotification(context,title, message,imageUrl,appName,url,className);
+            createPictureStyleNotification(context,title, message,imageUrl,url,className);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void createPictureStyleNotification(Context mContext, String title, String message,
-                                                String imageUrl, String appName, String url, String className) throws IOException {
+                                                String imageUrl, String url, String className) throws IOException {
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
         if (notificationManager == null) {
@@ -122,13 +120,12 @@ public class FCMNotificationManager {
 
             pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            builder.setContentTitle(appName)                            // required
+            builder.setContentTitle(title)                            // required
                     .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                     .setContentText(message) // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
-                    .setTicker(title)
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                     .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())
                     .setStyle(new NotificationCompat.BigPictureStyle()
@@ -152,13 +149,12 @@ public class FCMNotificationManager {
 
             pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            builder.setContentTitle(appName)                            // required
+            builder.setContentTitle(title)                            // required
                     .setSmallIcon(R.drawable.ic_lib_notifications)   // required
                     .setContentText(message) // required
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
-                    .setTicker(title)
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                     .setPriority(Notification.PRIORITY_HIGH)
                     .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())

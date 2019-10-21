@@ -1,20 +1,15 @@
 package com.estimotelib;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
 import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
-import com.estimotelib.interfaces.OnBeaconMessageListener;
 import com.estimotelib.model.AddUserResponse;
 import com.google.gson.Gson;
-
 import java.util.List;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -44,26 +39,11 @@ public class EstimoteLibUtil {
         mNm = new EstimoteNotificationManager(applicationContext);
     }
 
-    public void enableBeaconsNotification(Activity mContext, final Class classRef, boolean flag, String appName) {
+    public void enableBeaconsNotification(Activity mContext, boolean flag) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
-            mNm.startMonitoring(mContext,classRef,flag,appName);
-        }
-    }
-
-    public void setBeaconMessageListener(OnBeaconMessageListener listener) {
-        if(mNm != null) {
-            Log.e(TAG,"EstimoteNotificationManager not null");
-            mNm.setBeaconMessageListener(listener);
-        }else{
-            Log.e(TAG,"EstimoteNotificationManager is null");
-        }
-    }
-
-    public void removeBeaconMessageListener() {
-        if(mNm != null) {
-            mNm.removeBeaconMessageListener();
+            mNm.startMonitoring(mContext,flag);
         }
     }
 
@@ -72,8 +52,7 @@ public class EstimoteLibUtil {
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
     }
 
-    public void startMonitoring(final Activity context, final Class classRef,
-                                final boolean flag, final String appName) {
+    public void startMonitoring(final Activity context, final boolean flag) {
 
         RequirementsWizardFactory
                 .createEstimoteRequirementsWizard()
@@ -82,7 +61,7 @@ public class EstimoteLibUtil {
                             @Override
                             public Unit invoke() {
                                 Log.d("app", "requirements fulfilled");
-                                enableBeaconsNotification(context,classRef,flag,appName);
+                                enableBeaconsNotification(context,flag);
                                 return null;
                             }
                         },
@@ -103,40 +82,14 @@ public class EstimoteLibUtil {
 
     }
 
-    public void showNotificationDialog(final Activity mContext, String appName, final String key,
-                                       final String value, final Class classRef)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(appName);
-        builder.setMessage(key);
-        builder.setCancelable(true);
-        builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent webViewIntent = new Intent(mContext, classRef);
-                webViewIntent.putExtra("WEB_VIEW_URL", value);
-                mContext.startActivity(webViewIntent);
-            }
-        });
-
-        builder.setNegativeButton("Mute", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mPreferenceUtil.storeMutedUrl(mContext,value);
-            }
-        });
-
-        builder.show();
-    }
-
-    public void sendAddUserRequest(Context context, String userName, String appName){
+    public void sendAddUserRequest(Context context, String userName, int appName){
         Log.e(TAG,"mUserName: "+userName);
         Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"mAppName: "+appName);
-        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.mIMEINumber);
+        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
-        mPropertyController.addUser(userName,"Android",mPreferenceUtil.getFCMToken(context),appName,
-                mPreferenceUtil.mIMEINumber,new ICallbackHandler<AddUserResponse>() {
+        mPropertyController.addUser(userName,1,mPreferenceUtil.getFCMToken(context),appName,
+                mPreferenceUtil.getIMEINumber(context),new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));

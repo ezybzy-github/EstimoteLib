@@ -68,16 +68,16 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         Log.e(TAG,"title: "+title);
         Log.e(TAG,"message: "+msg);
 
-        showFCMNotification(getApplicationContext(),title,msg,Image,AppName,url,reference);
+        showFCMNotification(getApplicationContext(),title,msg,Image,url,reference);
     }
 
-    private void showFCMNotification(Context ctx, String title, String message, String image, String appName, String url,
+    private void showFCMNotification(Context ctx, String title, String message, String image, String url,
                                     String className){
         if(!image.equalsIgnoreCase("")){
             mFCMNotificationManager.
-                    createPictureTypeNotification(ctx,title,message,image,appName,url, className);
+                    createPictureTypeNotification(ctx,title,message,image,url, className);
         }else{
-            mFCMNotificationManager.createNotification(title,ctx,message,url,appName,className);
+            mFCMNotificationManager.createNotification(title,ctx,message,url,className);
         }
     }
 }

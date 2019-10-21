@@ -23,7 +23,7 @@ public class PropertyModule extends BaseModule {
         mICallbackHandler.isError(errorMsg);
     }
 
-    public void visitProperty(String fcmToken,String propertyUrl,String appName,String imeiNumber,final Class classRef,
+    public void visitProperty(String fcmToken,String propertyUrl,int appName,String imeiNumber,final Class classRef,
                        final ICallbackHandler iCallbackHandler) {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
@@ -31,19 +31,27 @@ public class PropertyModule extends BaseModule {
         dataCall.enqueue(makeNetworkCall());
     }
 
-    public void exitProperty(String userId,String propertyUrl,String firebaseId,String appName,String deviceIMEI,final Class classRef,
-                                final ICallbackHandler iCallbackHandler) {
+    public void exitProperty(String userId,String propertyUrl,String firebaseId,int appName,String deviceIMEI,
+                             final Class classRef,final ICallbackHandler iCallbackHandler) {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
         Call<ResponseBody> dataCall = mEstimoteLibApi.exitProperty(userId,firebaseId,appName,propertyUrl,deviceIMEI);
         dataCall.enqueue(makeNetworkCall());
     }
 
-    public void addUser(String userName,String deviceType,String firebaseId,String appName,String deviceIMEI,final Class classRef,
-                               final ICallbackHandler iCallbackHandler) {
+    public void addUser(String userName,int deviceType,String firebaseId,int appName,String deviceIMEI,
+                        final Class classRef,final ICallbackHandler iCallbackHandler) {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
         Call<ResponseBody> dataCall = mEstimoteLibApi.addUser(userName,deviceType,firebaseId,appName,deviceIMEI);
+        dataCall.enqueue(makeNetworkCall());
+    }
+
+    public void updateToken(String userId,String firebaseId,
+                        final Class classRef,final ICallbackHandler iCallbackHandler) {
+        mICallbackHandler = iCallbackHandler;
+        mClassRef = classRef;
+        Call<ResponseBody> dataCall = mEstimoteLibApi.updateToken(userId,firebaseId);
         dataCall.enqueue(makeNetworkCall());
     }
 }
