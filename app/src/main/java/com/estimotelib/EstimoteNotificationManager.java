@@ -48,6 +48,8 @@ public class EstimoteNotificationManager {
         mPropertyController = new PropertyController(context);
 
         mPreferenceUtil = new PreferenceUtil();
+
+        sendExitPropertyRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
     }
 
     public void setBeaconMessageListener(OnBeaconMessageListener beaconMessageListener) {
