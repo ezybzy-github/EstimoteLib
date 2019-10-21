@@ -85,6 +85,7 @@ public class EstimoteLibUtil {
     }
 
     public void sendAddUserRequest(final Context context, String userName, int appName){
+        Log.e(TAG,"ADD_USER: ");
         Log.e(TAG,"mUserName: "+userName);
         Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"mAppName: "+appName);
@@ -110,6 +111,7 @@ public class EstimoteLibUtil {
     }
 
     private void SendTokenRefreshRequest(Context context,String userId) {
+        Log.e(TAG,"UPDATE_USER: ");
         Log.e(TAG,"TOKEN_UPDATE: ");
         Log.e(TAG,"fireBaseId: "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"getUserId: "+userId);
