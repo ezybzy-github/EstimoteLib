@@ -37,15 +37,17 @@ public class EstimoteLibUtil {
         Log.e(TAG,"ID: "+appId);
         Log.e(TAG,"TOKEN: "+appToken);
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
+
         mPreferenceUtil = new PreferenceUtil();
         mPropertyController = new PropertyController(applicationContext);
+
+        mNm = new EstimoteNotificationManager(applicationContext);
     }
 
     public void enableBeaconsNotification(Activity mContext, final Class classRef, boolean flag, String appName) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
-            mNm = new EstimoteNotificationManager(mContext);
             mNm.startMonitoring(mContext,classRef,flag,appName);
         }
     }
