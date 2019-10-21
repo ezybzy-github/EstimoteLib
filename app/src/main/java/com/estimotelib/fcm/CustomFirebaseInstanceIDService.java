@@ -27,27 +27,6 @@ public class CustomFirebaseInstanceIDService extends FirebaseInstanceIdService
         String firebaseId = FirebaseInstanceId.getInstance().getToken();
         Log.e(TAG,"FIREBASE_ID: "+firebaseId);
 
-        if(!firebaseId.equalsIgnoreCase(mPreferenceUtil.getFCMToken(getApplicationContext()))){
-            SendTokenRefreshRequest(firebaseId);
-        }
         mPreferenceUtil.saveFCMToken(this,firebaseId);
-    }
-
-    private void SendTokenRefreshRequest(String fireBaseId) {
-        Log.e(TAG,"fireBaseId: "+fireBaseId);
-        Log.e(TAG,"getUserId: "+mPreferenceUtil.getUserId(getApplicationContext()));
-
-        mPropertyController.updateToken(mPreferenceUtil.getUserId(getApplicationContext()), fireBaseId,
-                new ICallbackHandler<PropertyVisitResponse>() {
-                    @Override
-                    public void response(PropertyVisitResponse response) {
-                        Log.e(TAG,"TOKEN_UPDATE: "+new Gson().toJson(response));
-                    }
-
-                    @Override
-                    public void isError(String errorMsg) {
-                        Log.e(TAG,"TOKEN_UPDATE ERROR: "+errorMsg);
-                    }
-                });
     }
 }

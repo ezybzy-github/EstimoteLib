@@ -298,6 +298,19 @@ public class PreferenceUtil {
         return sp.getString("UserId","");
     }
 
+    public void saveIdFromServer(Context context, String UserId){
+        SharedPreferences sp = context.getSharedPreferences("ID_FROM_SERVER", Context.MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putString("ID",UserId);
+        spe.apply();
+        spe.commit();
+    }
+
+    public String getIdFromServer(Context context){
+        SharedPreferences sp = context.getSharedPreferences("ID_FROM_SERVER", Context.MODE_PRIVATE);
+        return sp.getString("ID","");
+    }
+
     public void saveApplicationName(Context context,int appName){
         SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();

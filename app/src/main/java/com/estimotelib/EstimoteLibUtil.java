@@ -9,6 +9,7 @@ import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
 import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.model.AddUserResponse;
+import com.estimotelib.model.PropertyVisitResponse;
 import com.google.gson.Gson;
 import java.util.List;
 import kotlin.Unit;
@@ -82,7 +83,7 @@ public class EstimoteLibUtil {
 
     }
 
-    public void sendAddUserRequest(Context context, String userName, int appName){
+    public void sendAddUserRequest(final Context context, String userName, int appName){
         Log.e(TAG,"mUserName: "+userName);
         Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"mAppName: "+appName);
@@ -92,12 +93,36 @@ public class EstimoteLibUtil {
                 mPreferenceUtil.getIMEINumber(context),new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
+                        mPreferenceUtil.saveIdFromServer(context, String.valueOf(response.getId()));
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
+
+                        if(response.getId() != null){
+                            SendTokenRefreshRequest(context,String.valueOf(response.getId()));
+                        }
                     }
 
                     @Override
                     public void isError(String errorMsg) {
+                        Log.e(TAG,"ADD_USER ERROR: "+errorMsg);
+                    }
+                });
+    }
 
+    private void SendTokenRefreshRequest(Context context,String userId) {
+        Log.e(TAG,"TOKEN_UPDATE: ");
+        Log.e(TAG,"fireBaseId: "+mPreferenceUtil.getFCMToken(context));
+        Log.e(TAG,"getUserId: "+userId);
+
+        mPropertyController.updateToken(userId, mPreferenceUtil.getFCMToken(context),
+                new ICallbackHandler<PropertyVisitResponse>() {
+                    @Override
+                    public void response(PropertyVisitResponse response) {
+                        Log.e(TAG,"TOKEN_UPDATE: "+new Gson().toJson(response));
+                    }
+
+                    @Override
+                    public void isError(String errorMsg) {
+                        Log.e(TAG,"TOKEN_UPDATE ERROR: "+errorMsg);
                     }
                 });
     }

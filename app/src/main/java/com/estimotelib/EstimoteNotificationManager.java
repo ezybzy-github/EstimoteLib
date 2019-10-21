@@ -190,7 +190,7 @@ public class EstimoteNotificationManager {
                     @Override
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         mPreferenceUtil.saveBeaconExitDetail(mContext,proximityContext.getDeviceId());
-                        readAttachment(mContext,proximityContext,Integer.parseInt(String.valueOf(mAppName)));
+                        readAttachment(mContext,proximityContext,mAppName);
                         return null;
                     }
                 })
@@ -233,7 +233,7 @@ public class EstimoteNotificationManager {
         Log.e(TAG,"getUserId: "+mPreferenceUtil.getUserId(context));
         Log.e(TAG,"URL: "+url);
         Log.e(TAG,"getFCMToken: "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"getFCMToken: "+mPreferenceUtil.getFCMToken(context));
+        Log.e(TAG,"appName: "+appName);
         Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context),url,mPreferenceUtil.getFCMToken(context),

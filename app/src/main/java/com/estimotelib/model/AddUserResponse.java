@@ -13,7 +13,7 @@ public class AddUserResponse {
     private String userName;
     @SerializedName("user_id")
     @Expose
-    private Object userId;
+    private String userId;
     @SerializedName("device_notification_id")
     @Expose
     private String deviceNotificationId;
@@ -53,7 +53,7 @@ public class AddUserResponse {
         return userId;
     }
 
-    public void setUserId(Object userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
