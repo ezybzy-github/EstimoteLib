@@ -5,6 +5,7 @@ import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.PropertyExitResponse;
 import com.estimotelib.model.PropertyVisitResponse;
+import com.estimotelib.model.UpdateUser;
 import com.estimotelib.module.PropertyModule;
 
 
@@ -66,10 +67,10 @@ public class PropertyController extends BaseController {
     }
 
     public void updateToken(String userId,String firebaseId,final ICallbackHandler iCallbackHandler) {
-        mPropertyModule.updateToken(userId,firebaseId,AddUserResponse.class,
-                new ICallbackHandler<AddUserResponse>() {
+        mPropertyModule.updateToken(userId,firebaseId, UpdateUser.class,
+                new ICallbackHandler<UpdateUser>() {
                     @Override
-                    public void response(AddUserResponse responseContest) {
+                    public void response(UpdateUser responseContest) {
                         iCallbackHandler.response(responseContest);
                     }
 
