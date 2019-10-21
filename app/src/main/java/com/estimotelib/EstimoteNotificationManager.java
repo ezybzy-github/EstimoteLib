@@ -55,6 +55,7 @@ public class EstimoteNotificationManager {
         mPreferenceUtil = new PreferenceUtil();
         mAppName = mPreferenceUtil.getApplicationName(context);
 
+        sendPropertyEntryRequest(context,"https://ankita_developer.com/",mAppName);
         sendExitPropertyRequest(context,"https://ankita_developer.com/",mAppName);
     }
 

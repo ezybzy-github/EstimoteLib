@@ -10,6 +10,7 @@ import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.PropertyVisitResponse;
+import com.estimotelib.model.UpdateUser;
 import com.google.gson.Gson;
 import java.util.List;
 import kotlin.Unit;
@@ -114,9 +115,9 @@ public class EstimoteLibUtil {
         Log.e(TAG,"getUserId: "+userId);
 
         mPropertyController.updateToken(userId, mPreferenceUtil.getFCMToken(context),
-                new ICallbackHandler<PropertyVisitResponse>() {
+                new ICallbackHandler<UpdateUser>() {
                     @Override
-                    public void response(PropertyVisitResponse response) {
+                    public void response(UpdateUser response) {
                         Log.e(TAG,"TOKEN_UPDATE: "+new Gson().toJson(response));
                     }
 

@@ -3,32 +3,42 @@ package com.estimotelib.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AddUserResponse {
-
+public class UpdateUser {
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("user_name")
     @Expose
     private Object userName;
-    @SerializedName("device_type")
+    @SerializedName("user_id")
     @Expose
-    private String deviceType;
+    private Object userId;
     @SerializedName("device_notification_id")
     @Expose
     private String deviceNotificationId;
+    @SerializedName("device_type")
+    @Expose
+    private String deviceType;
     @SerializedName("app_name")
     @Expose
     private String appName;
     @SerializedName("device_imei")
     @Expose
     private String deviceImei;
-    @SerializedName("updated_at")
-    @Expose
-    private String updatedAt;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
-    @SerializedName("id")
+    @SerializedName("updated_at")
     @Expose
-    private Integer id;
+    private String updatedAt;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Object getUserName() {
         return userName;
@@ -38,12 +48,12 @@ public class AddUserResponse {
         this.userName = userName;
     }
 
-    public String getDeviceType() {
-        return deviceType;
+    public Object getUserId() {
+        return userId;
     }
 
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
+    public void setUserId(Object userId) {
+        this.userId = userId;
     }
 
     public String getDeviceNotificationId() {
@@ -52,6 +62,14 @@ public class AddUserResponse {
 
     public void setDeviceNotificationId(String deviceNotificationId) {
         this.deviceNotificationId = deviceNotificationId;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
     public String getAppName() {
@@ -70,14 +88,6 @@ public class AddUserResponse {
         this.deviceImei = deviceImei;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public String getCreatedAt() {
         return createdAt;
     }
@@ -86,11 +96,11 @@ public class AddUserResponse {
         this.createdAt = createdAt;
     }
 
-    public Integer getId() {
-        return id;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
