@@ -47,7 +47,7 @@ public class EstimoteLibUtil {
         }
     }
 
-    public void setClassReferenceForNotification(Context ctx,Class reference,String AppName){
+    public void setClassReferenceForNotification(Context ctx,Class reference,int AppName){
         mPreferenceUtil.saveApplicationName(ctx,AppName);
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
     }

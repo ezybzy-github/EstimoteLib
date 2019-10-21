@@ -13,7 +13,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
 
-    String AppName;
+    int AppName;
 
     String reference;
 

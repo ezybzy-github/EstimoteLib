@@ -298,26 +298,26 @@ public class PreferenceUtil {
         return sp.getString("UserId","");
     }
 
-    public void saveApplicationName(Context context,String appName){
+    public void saveApplicationName(Context context,int appName){
         SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
-        spe.putString("appName",appName);
+        spe.putInt("appName",appName);
         spe.apply();
         spe.commit();
     }
 
-    public String getApplicationName(Context context){
+    public Integer getApplicationName(Context context){
         SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
-        return sp.getString("appName","");
+        return sp.getInt("appName",0);
     }
 
-    public void SaveClassReferenceForNotification(Context context,String appName,Class referenceClass){
+    public void SaveClassReferenceForNotification(Context context,int appName,Class referenceClass){
         try{
             SharedPreferences pref = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
-            if(!map.containsKey(appName))
+            if(!map.containsKey(String.valueOf(appName)))
             {
-                map.put(appName, referenceClass.getName());
+                map.put(String.valueOf(appName), referenceClass.getName());
             }
 
             //Use url as map key and current date as value
@@ -333,14 +333,14 @@ public class PreferenceUtil {
         }
     }
 
-    public String getClassReferenceName(Context context,String appName){
+    public String getClassReferenceName(Context context,int appName){
         String className = null;
         try{
             SharedPreferences pref = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
-            if(map.containsKey(appName))
+            if(map.containsKey(String.valueOf(appName)))
             {
-                className = pref.getString(appName,"");
+                className = pref.getString(String.valueOf(appName),"");
             }
         }catch (Exception e){
             e.printStackTrace();

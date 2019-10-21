@@ -37,8 +37,13 @@ public class EstimoteNotificationManager {
     public static final String TAG = "EstimoNotifications";
 
     private NotificationManager notificationManager;
-    private String key,value,mAppName;
+
+    private String key,value;
+
+    private int mAppName;
+
     private PropertyController mPropertyController;
+
     private boolean isFirstTime = false;
 
     private PreferenceUtil mPreferenceUtil;
@@ -50,7 +55,7 @@ public class EstimoteNotificationManager {
         mPreferenceUtil = new PreferenceUtil();
         mAppName = mPreferenceUtil.getApplicationName(context);
 
-        sendExitPropertyRequest(context,"https://ankita_developer.com/",Integer.parseInt(mAppName));
+        sendExitPropertyRequest(context,"https://ankita_developer.com/",mAppName);
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -134,7 +139,6 @@ public class EstimoteNotificationManager {
             if(!isPropertyVisited) {
                 if(!isFirstTime){
                     isFirstTime = true;
-                    String AppName = mPreferenceUtil.getApplicationName(mContext);
                     showNotificationDialog(mContext,key,value);
                 }else{
                     NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
