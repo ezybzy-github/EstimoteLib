@@ -241,24 +241,4 @@ public class EstimoteNotificationManager {
             }
         });
     }
-
-    public void sendAddUserRequest(Context context, String userName, String appName){
-        Log.e(TAG,"mUserName: "+userName);
-        Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"mAppName: "+appName);
-        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.mIMEINumber);
-
-        mPropertyController.addUser(userName,"Android",mPreferenceUtil.getFCMToken(context),appName,
-                mPreferenceUtil.mIMEINumber,new ICallbackHandler<AddUserResponse>() {
-                    @Override
-                    public void response(AddUserResponse response) {
-                        Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
-                    }
-
-                    @Override
-                    public void isError(String errorMsg) {
-
-                    }
-                });
-    }
 }

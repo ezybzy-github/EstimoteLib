@@ -2,19 +2,20 @@ package com.estimotelib;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
+import com.estimotelib.controller.PropertyController;
+import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.interfaces.OnBeaconMessageListener;
-import java.util.List;
+import com.estimotelib.model.AddUserResponse;
+import com.google.gson.Gson;
 
+import java.util.List;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
@@ -27,21 +28,17 @@ public class EstimoteLibUtil {
     private EstimoteNotificationManager mNm;
     private boolean mIsMonitoringOn = false;
 
-    private NotificationManager notificationManager;
-
     private PreferenceUtil mPreferenceUtil;
+
+    private PropertyController mPropertyController;
 
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
 
         Log.e(TAG,"ID: "+appId);
         Log.e(TAG,"TOKEN: "+appToken);
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
-        notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mPreferenceUtil = new PreferenceUtil();
-    }
-
-    public EstimoteLibUtil(){
-
+        mPropertyController = new PropertyController(applicationContext);
     }
 
     public void enableBeaconsNotification(Activity mContext, final Class classRef, boolean flag, String appName) {
@@ -128,5 +125,25 @@ public class EstimoteLibUtil {
         });
 
         builder.show();
+    }
+
+    public void sendAddUserRequest(Context context, String userName, String appName){
+        Log.e(TAG,"mUserName: "+userName);
+        Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
+        Log.e(TAG,"mAppName: "+appName);
+        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.mIMEINumber);
+
+        mPropertyController.addUser(userName,"Android",mPreferenceUtil.getFCMToken(context),appName,
+                mPreferenceUtil.mIMEINumber,new ICallbackHandler<AddUserResponse>() {
+                    @Override
+                    public void response(AddUserResponse response) {
+                        Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
+                    }
+
+                    @Override
+                    public void isError(String errorMsg) {
+
+                    }
+                });
     }
 }
