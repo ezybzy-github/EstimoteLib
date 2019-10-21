@@ -54,9 +54,6 @@ public class EstimoteNotificationManager {
 
         mPreferenceUtil = new PreferenceUtil();
         mAppName = mPreferenceUtil.getApplicationName(context);
-
-        sendPropertyEntryRequest(context,"https://ankita_developer.com/",mAppName);
-        sendExitPropertyRequest(context,"https://ankita_developer.com/",mAppName);
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -208,7 +205,7 @@ public class EstimoteNotificationManager {
         sendExitPropertyRequest(context,value,appName);
     }
 
-    private void sendPropertyEntryRequest(final Context context, String url, int appName){
+    public void sendPropertyEntryRequest(final Context context, String url, int appName){
         Log.e(TAG,"PROPERTY_ENTER: ");
         Log.e(TAG,"FCMToken: "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"URL: "+url);
@@ -230,7 +227,7 @@ public class EstimoteNotificationManager {
         });
     }
 
-    private void sendExitPropertyRequest(Context context, String url, int appName){
+    public void sendExitPropertyRequest(Context context, String url, int appName){
         Log.e(TAG,"PROPERTY_EXIT: ");
         Log.e(TAG,"getUserId: "+mPreferenceUtil.getUserId(context));
         Log.e(TAG,"URL: "+url);

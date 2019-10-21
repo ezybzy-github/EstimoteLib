@@ -101,6 +101,9 @@ public class EstimoteLibUtil {
                         if(response.getId() != null){
                             SendTokenRefreshRequest(context,String.valueOf(response.getId()));
                         }
+
+                        mNm.sendPropertyEntryRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
+                        mNm.sendExitPropertyRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
                     }
 
                     @Override
