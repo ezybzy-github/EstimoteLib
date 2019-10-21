@@ -17,12 +17,9 @@ public class CustomFirebaseInstanceIDService extends FirebaseInstanceIdService
 
     PreferenceUtil mPreferenceUtil;
 
-    private PropertyController mPropertyController;
-
     @Override
     public void onTokenRefresh() {
         mPreferenceUtil = new PreferenceUtil();
-        mPropertyController = new PropertyController(getApplicationContext());
 
         String firebaseId = FirebaseInstanceId.getInstance().getToken();
         Log.e(TAG,"FIREBASE_ID: "+firebaseId);

@@ -9,7 +9,6 @@ import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
 import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.model.AddUserResponse;
-import com.estimotelib.model.PropertyVisitResponse;
 import com.estimotelib.model.UpdateUser;
 import com.google.gson.Gson;
 import java.util.List;
@@ -31,8 +30,8 @@ public class EstimoteLibUtil {
 
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
 
-        Log.e(TAG,"ID: "+appId);
-        Log.e(TAG,"TOKEN: "+appToken);
+//        Log.e(TAG,"ID: "+appId);
+//        Log.e(TAG,"TOKEN: "+appToken);
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
 
         mPreferenceUtil = new PreferenceUtil();
@@ -85,11 +84,11 @@ public class EstimoteLibUtil {
     }
 
     public void sendAddUserRequest(final Context context, String userName, int appName){
-        Log.e(TAG,"ADD_USER: ");
-        Log.e(TAG,"mUserName: "+userName);
-        Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"mAppName: "+appName);
-        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
+//        Log.e(TAG,"ADD_USER: ");
+//        Log.e(TAG,"mUserName: "+userName);
+//        Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
+//        Log.e(TAG,"mAppName: "+appName);
+//        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.addUser(userName,1,mPreferenceUtil.getFCMToken(context),appName,
                 mPreferenceUtil.getIMEINumber(context),new ICallbackHandler<AddUserResponse>() {
@@ -98,12 +97,9 @@ public class EstimoteLibUtil {
                         mPreferenceUtil.saveIdFromServer(context, String.valueOf(response.getId()));
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
 
-//                        if(response.getId() != null){
-//                            SendTokenRefreshRequest(context,String.valueOf(response.getId()));
-//                        }
-
-                        mNm.sendPropertyEntryRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
-                        mNm.sendExitPropertyRequest(context,"https://ankita_developer.com/",mPreferenceUtil.getApplicationName(context));
+                        if(response.getId() != null){
+                            SendTokenRefreshRequest(context,String.valueOf(response.getId()));
+                        }
                     }
 
                     @Override
@@ -114,9 +110,9 @@ public class EstimoteLibUtil {
     }
 
     private void SendTokenRefreshRequest(Context context,String userId) {
-        Log.e(TAG,"TOKEN_UPDATE: ");
-        Log.e(TAG,"fireBaseId: "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"getUserId: "+userId);
+//        Log.e(TAG,"TOKEN_UPDATE: ");
+//        Log.e(TAG,"fireBaseId: "+mPreferenceUtil.getFCMToken(context));
+//        Log.e(TAG,"getUserId: "+userId);
 
         mPropertyController.updateToken(userId, mPreferenceUtil.getFCMToken(context),
                 new ICallbackHandler<UpdateUser>() {

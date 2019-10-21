@@ -206,11 +206,11 @@ public class EstimoteNotificationManager {
     }
 
     public void sendPropertyEntryRequest(final Context context, String url, int appName){
-        Log.e(TAG,"PROPERTY_ENTER: ");
-        Log.e(TAG,"FCMToken: "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"URL: "+url);
-        Log.e(TAG,"App name: "+appName);
-        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
+//        Log.e(TAG,"PROPERTY_ENTER: ");
+//        Log.e(TAG,"FCMToken: "+mPreferenceUtil.getFCMToken(context));
+//        Log.e(TAG,"URL: "+url);
+//        Log.e(TAG,"App name: "+appName);
+//        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
                 mPreferenceUtil.getIMEINumber(context), new ICallbackHandler<PropertyVisitResponse>() {
@@ -228,12 +228,12 @@ public class EstimoteNotificationManager {
     }
 
     public void sendExitPropertyRequest(Context context, String url, int appName){
-        Log.e(TAG,"PROPERTY_EXIT: ");
-        Log.e(TAG,"getUserId: "+mPreferenceUtil.getUserId(context));
-        Log.e(TAG,"URL: "+url);
-        Log.e(TAG,"getFCMToken: "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"appName: "+appName);
-        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
+//        Log.e(TAG,"PROPERTY_EXIT: ");
+//        Log.e(TAG,"getUserId: "+mPreferenceUtil.getUserId(context));
+//        Log.e(TAG,"URL: "+url);
+//        Log.e(TAG,"getFCMToken: "+mPreferenceUtil.getFCMToken(context));
+//        Log.e(TAG,"appName: "+appName);
+//        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context),url,mPreferenceUtil.getFCMToken(context),
                 appName, mPreferenceUtil.getIMEINumber(context),
