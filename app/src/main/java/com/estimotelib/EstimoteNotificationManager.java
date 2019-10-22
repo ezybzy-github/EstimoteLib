@@ -40,20 +40,13 @@ public class EstimoteNotificationManager {
 
     private String key,value;
 
-    private int mAppName;
-
     private PropertyController mPropertyController;
 
     private boolean isFirstTime = false;
 
-    private PreferenceUtil mPreferenceUtil;
-
     public EstimoteNotificationManager(Context context) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(context);
-
-        mPreferenceUtil = new PreferenceUtil();
-        mAppName = mPreferenceUtil.getApplicationName(context);
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -69,6 +62,9 @@ public class EstimoteNotificationManager {
             contentChannel.setSound(alarmSound, attributes);
             notificationManager.createNotificationChannel(contentChannel);
         }
+
+        PreferenceUtil mPreferenceUtil = new PreferenceUtil();
+        int mAppName = mPreferenceUtil.getApplicationName(mContext);
 
         Intent webViewIntent = new Intent();
         webViewIntent.setComponent(new ComponentName(mContext, mPreferenceUtil.getClassReferenceName(mContext,mAppName)));
@@ -110,6 +106,9 @@ public class EstimoteNotificationManager {
     private void readAttachmentsAndShowNotifications(Activity mContext, final ProximityZoneContext proximityZoneContext,
                                                      boolean flag) throws ClassNotFoundException {
         final String beaconId = proximityZoneContext.getDeviceId();
+
+        final PreferenceUtil mPreferenceUtil = new PreferenceUtil();
+        int mAppName = mPreferenceUtil.getApplicationName(mContext);
 
         if(mPreferenceUtil.isBeaconNotificationReceivedInTwelveHours(mContext,beaconId)) {
             return;
@@ -157,6 +156,9 @@ public class EstimoteNotificationManager {
     }
 
     public void startMonitoring(final Activity mContext, final boolean flag) {
+        final PreferenceUtil mPreferenceUtil = new PreferenceUtil();
+        final int mAppName = mPreferenceUtil.getApplicationName(mContext);
+
         ProximityObserver proximityObserver =
                 new ProximityObserverBuilder(mContext, EstimoteLibUtil.cloudCredentials)
                         .onError(new Function1<Throwable, Unit>() {
@@ -211,6 +213,7 @@ public class EstimoteNotificationManager {
 //        Log.e(TAG,"URL: "+url);
 //        Log.e(TAG,"App name: "+appName);
 //        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
+        final PreferenceUtil mPreferenceUtil = new PreferenceUtil();
 
         mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
                 mPreferenceUtil.getIMEINumber(context), new ICallbackHandler<PropertyVisitResponse>() {
@@ -235,6 +238,8 @@ public class EstimoteNotificationManager {
 //        Log.e(TAG,"appName: "+appName);
 //        Log.e(TAG,"IMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
+        final PreferenceUtil mPreferenceUtil = new PreferenceUtil();
+
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context),url,mPreferenceUtil.getFCMToken(context),
                 appName, mPreferenceUtil.getIMEINumber(context),
                 new ICallbackHandler<PropertyExitResponse>() {
@@ -252,6 +257,9 @@ public class EstimoteNotificationManager {
 
     public void showNotificationDialog(final Activity mContext,final String key,final String value)
     {
+        final PreferenceUtil mPreferenceUtil = new PreferenceUtil();
+        final int mAppName = mPreferenceUtil.getApplicationName(mContext);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(mAppName);
         builder.setMessage(key);

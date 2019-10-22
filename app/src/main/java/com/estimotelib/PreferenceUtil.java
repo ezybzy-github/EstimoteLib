@@ -333,7 +333,6 @@ public class PreferenceUtil {
                 map.put(String.valueOf(appName), referenceClass.getName());
             }
 
-            //Use url as map key and current date as value
             SharedPreferences.Editor editor= pref.edit();
 
             for (String s : map.keySet()) {

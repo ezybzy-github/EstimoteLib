@@ -36,14 +36,13 @@ public class EstimoteLibUtil {
 
         mPreferenceUtil = new PreferenceUtil();
         mPropertyController = new PropertyController(applicationContext);
-
-        mNm = new EstimoteNotificationManager(applicationContext);
     }
 
     public void enableBeaconsNotification(Activity mContext, boolean flag) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
+            mNm = new EstimoteNotificationManager(mContext);
             mNm.startMonitoring(mContext,flag);
         }
     }
