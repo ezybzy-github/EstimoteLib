@@ -272,7 +272,7 @@ public class EstimoteNotificationManager {
         final int mAppName = mPreferenceUtil.getApplicationName(mContext);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(mAppName);
+        builder.setTitle("Title");
         builder.setMessage(key);
         builder.setCancelable(true);
         builder.setPositiveButton("More Details", new DialogInterface.OnClickListener() {
