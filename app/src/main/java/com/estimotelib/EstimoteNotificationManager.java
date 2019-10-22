@@ -143,15 +143,15 @@ public class EstimoteNotificationManager {
             }
 
             if(!isPropertyVisited) {
-                /*if(!isFirstTime){
+                if(!isFirstTime){
                     isFirstTime = true;
                     showNotificationDialog(mContext,key,value);
                 }else{
-                }*/
 
-                NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
-                        value, randomNotificationId(),flag);
-                notificationManager.notify(randomNotificationId(), entryNotification.build());
+                    NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
+                            value, randomNotificationId(),flag);
+                    notificationManager.notify(randomNotificationId(), entryNotification.build());
+                }
 
             }
 
