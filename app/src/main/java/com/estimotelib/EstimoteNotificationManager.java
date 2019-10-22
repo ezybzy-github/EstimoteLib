@@ -22,6 +22,7 @@ import com.estimote.proximity_sdk.api.ProximityZoneBuilder;
 import com.estimote.proximity_sdk.api.ProximityZoneContext;
 import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
+import com.estimotelib.interfaces.INotificationHandler;
 import com.estimotelib.model.PropertyExitResponse;
 import com.estimotelib.model.PropertyVisitResponse;
 import com.estimotelib.receiver.ActionButtonReceiver;
@@ -35,18 +36,18 @@ import kotlin.jvm.functions.Function1;
 
 public class EstimoteNotificationManager {
     public static final String TAG = "EstimoNotifications";
-
     private NotificationManager notificationManager;
-
     private String key,value;
-
     private PropertyController mPropertyController;
 
     private boolean isFirstTime = false;
+    private INotificationHandler mInotificatioHandler;
 
-    public EstimoteNotificationManager(Context context) {
+
+    public EstimoteNotificationManager(Context context, final INotificationHandler notificationHandler) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(context);
+        this.mInotificatioHandler = notificationHandler;
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -105,6 +106,14 @@ public class EstimoteNotificationManager {
 
     private void readAttachmentsAndShowNotifications(Activity mContext, final ProximityZoneContext proximityZoneContext,
                                                      boolean flag) throws ClassNotFoundException {
+
+        if(this.mInotificatioHandler != null) {
+            com.estimotelib.model.Notification n = new com.estimotelib.model.Notification();
+            n.key = "Key";
+            n.type = 2;
+            this.mInotificatioHandler.OnNotificationReceived(n);
+        }
+
         final String beaconId = proximityZoneContext.getDeviceId();
 
         final PreferenceUtil mPreferenceUtil = new PreferenceUtil();
@@ -134,14 +143,16 @@ public class EstimoteNotificationManager {
             }
 
             if(!isPropertyVisited) {
-                if(!isFirstTime){
+                /*if(!isFirstTime){
                     isFirstTime = true;
                     showNotificationDialog(mContext,key,value);
                 }else{
-                    NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
-                            value, randomNotificationId(),flag);
-                    notificationManager.notify(randomNotificationId(), entryNotification.build());
-                }
+                }*/
+
+                NotificationCompat.Builder entryNotification = buildNotification(mContext,key,
+                        value, randomNotificationId(),flag);
+                notificationManager.notify(randomNotificationId(), entryNotification.build());
+
             }
 
             sendPropertyEntryRequest(mContext,value,Integer.parseInt(String.valueOf(mAppName)));

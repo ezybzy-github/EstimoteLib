@@ -8,6 +8,7 @@ import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizar
 import com.estimote.proximity_sdk.api.EstimoteCloudCredentials;
 import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
+import com.estimotelib.interfaces.INotificationHandler;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.UpdateUser;
 import com.google.gson.Gson;
@@ -38,11 +39,11 @@ public class EstimoteLibUtil {
         mPropertyController = new PropertyController(applicationContext);
     }
 
-    public void enableBeaconsNotification(Activity mContext, boolean flag) {
+    public void enableBeaconsNotification(Activity mContext, boolean flag, final INotificationHandler notificationHandler) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
-            mNm = new EstimoteNotificationManager(mContext);
+            mNm = new EstimoteNotificationManager(mContext, notificationHandler);
             mNm.startMonitoring(mContext,flag);
         }
     }
@@ -52,7 +53,7 @@ public class EstimoteLibUtil {
         mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
     }
 
-    public void startMonitoring(final Activity context, final boolean flag) {
+    public void startMonitoring(final Activity context, final boolean flag, final INotificationHandler notificationHandler) {
 
         RequirementsWizardFactory
                 .createEstimoteRequirementsWizard()
@@ -61,7 +62,7 @@ public class EstimoteLibUtil {
                             @Override
                             public Unit invoke() {
                                 Log.d("app", "requirements fulfilled");
-                                enableBeaconsNotification(context,flag);
+                                enableBeaconsNotification(context,flag, notificationHandler);
                                 return null;
                             }
                         },
