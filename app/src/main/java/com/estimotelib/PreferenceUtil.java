@@ -299,19 +299,6 @@ public class PreferenceUtil {
         return sp.getString("UserId","");
     }
 
-    public void saveIdFromServer(Context context, String UserId){
-        SharedPreferences sp = context.getSharedPreferences("ID_FROM_SERVER", Context.MODE_PRIVATE);
-        SharedPreferences.Editor spe = sp.edit();
-        spe.putString("ID",UserId);
-        spe.apply();
-        spe.commit();
-    }
-
-    public String getIdFromServer(Context context){
-        SharedPreferences sp = context.getSharedPreferences("ID_FROM_SERVER", Context.MODE_PRIVATE);
-        return sp.getString("ID","");
-    }
-
     public void SaveNotificationInfo(Context context, String appNameAsString, NotificationInfo info){
         try{
             Gson gson = new Gson();
@@ -351,5 +338,83 @@ public class PreferenceUtil {
             e.printStackTrace();
         }
         return info;
+    }
+
+    public void isAppLunchFirstTime(Context context,String flag ,String appName){
+        try {
+            SharedPreferences pref = context.getSharedPreferences("APP_INSTALLED", Context.MODE_PRIVATE);
+            HashMap<String, String> map = getMap(pref);
+
+            if(!map.containsKey(appName))
+            {
+                map.put(appName, flag);
+            }
+
+            SharedPreferences.Editor editor= pref.edit();
+
+            for (String s : map.keySet()) {
+                editor.putString(s, map.get(s));
+            }
+
+            editor.apply();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String getIfAppLaunchFirst(Context context,String appName){
+        String flag = "no";
+        try {
+            SharedPreferences pref = context.getSharedPreferences("APP_INSTALLED", Context.MODE_PRIVATE);
+            HashMap<String, String> map = getMap(pref);
+            if(map.containsKey(appName))
+            {
+                flag = pref.getString(appName,"no");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flag;
+    }
+
+    public void saveUserId(Context context,String id ,int appName){
+        try {
+            SharedPreferences pref = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
+            HashMap<String, String> map = getMap(pref);
+
+            if(!map.containsKey(String.valueOf(appName)))
+            {
+                map.put(String.valueOf(appName), id);
+            }
+
+            SharedPreferences.Editor editor= pref.edit();
+
+            for (String s : map.keySet()) {
+                editor.putString(s, map.get(s));
+            }
+
+            editor.apply();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String getUserId(Context context,int appName){
+        String id = "";
+        try {
+            SharedPreferences pref = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
+            HashMap<String, String> map = getMap(pref);
+            if(map.containsKey(String.valueOf(appName)))
+            {
+                id = pref.getString(String.valueOf(appName),"no");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return id;
     }
 }

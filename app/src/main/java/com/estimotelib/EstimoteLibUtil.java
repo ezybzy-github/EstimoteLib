@@ -86,18 +86,17 @@ public class EstimoteLibUtil {
 
     }
 
-    public void sendAddUserRequest(final Context context, String userName, int appName){
+    public void sendAddUserRequest(final Context context, String userName, final int appName){
 
         mPropertyController.addUser(userName,1,mPreferenceUtil.getFCMToken(context),appName,
                 mPreferenceUtil.getIMEINumber(context),new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
-                        mPreferenceUtil.saveIdFromServer(context, String.valueOf(response.getId()));
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
 
-                        if(response.getId() != null){
-                            SendTokenRefreshRequest(context,String.valueOf(response.getId()));
-                        }
+                        int id = response.getId();
+                        mPreferenceUtil.saveUserId(context,String.valueOf(id),appName);
+                        mPreferenceUtil.isAppLunchFirstTime(context,String.valueOf(id),"yes");
                     }
 
                     @Override
@@ -107,7 +106,7 @@ public class EstimoteLibUtil {
                 });
     }
 
-    private void SendTokenRefreshRequest(Context context,String userId) {
+    public void SendTokenRefreshRequest(Context context,String userId) {
 
         mPropertyController.updateToken(userId, mPreferenceUtil.getFCMToken(context),
                 new ICallbackHandler<UpdateUser>() {
