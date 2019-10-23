@@ -379,14 +379,14 @@ public class PreferenceUtil {
         return flag;
     }
 
-    public void saveUserId(Context context,String id ,int appName){
+    public void saveUserId(Context context,String id ,String appName){
         try {
             SharedPreferences pref = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
 
-            if(!map.containsKey(String.valueOf(appName)))
+            if(!map.containsKey(appName))
             {
-                map.put(String.valueOf(appName), id);
+                map.put(appName, id);
             }
 
             SharedPreferences.Editor editor= pref.edit();
@@ -401,14 +401,14 @@ public class PreferenceUtil {
         }
     }
 
-    public String getUserId(Context context,int appName){
+    public String getUserId(Context context,String appName){
         String id = "";
         try {
             SharedPreferences pref = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
-            if(map.containsKey(String.valueOf(appName)))
+            if(map.containsKey(appName))
             {
-                id = pref.getString(String.valueOf(appName),"no");
+                id = pref.getString(appName,"no");
             }
 
         }catch (Exception e){

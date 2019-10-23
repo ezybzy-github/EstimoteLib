@@ -95,8 +95,8 @@ public class EstimoteLibUtil {
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
 
                         int id = response.getId();
-                        mPreferenceUtil.saveUserId(context,String.valueOf(id),appName);
-                        mPreferenceUtil.isAppLunchFirstTime(context,String.valueOf(id),"yes");
+                        mPreferenceUtil.saveUserId(context,String.valueOf(id),String.valueOf(appName));
+                        mPreferenceUtil.isAppLunchFirstTime(context,"yes",String.valueOf(appName));
                     }
 
                     @Override
