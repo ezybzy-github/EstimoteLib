@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.estimotelib.model.NotificationInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -311,26 +312,16 @@ public class PreferenceUtil {
         return sp.getString("ID","");
     }
 
-    public void saveApplicationName(Context context,int appName){
-        SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
-        SharedPreferences.Editor spe = sp.edit();
-        spe.putInt("appName",appName);
-        spe.apply();
-        spe.commit();
-    }
-
-    public Integer getApplicationName(Context context){
-        SharedPreferences sp = context.getSharedPreferences("APPLICATION_NAME", Context.MODE_PRIVATE);
-        return sp.getInt("appName",0);
-    }
-
-    public void SaveClassReferenceForNotification(Context context,int appName,Class referenceClass){
+    public void SaveNotificationInfo(Context context, String appNameAsString, NotificationInfo info){
         try{
-            SharedPreferences pref = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String json = gson.toJson(info);
+
+            SharedPreferences pref = context.getSharedPreferences("NOTIFICATION_INFO", Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
-            if(!map.containsKey(String.valueOf(appName)))
+            if(!map.containsKey(appNameAsString))
             {
-                map.put(String.valueOf(appName), referenceClass.getName());
+                map.put(appNameAsString, json);
             }
 
             SharedPreferences.Editor editor= pref.edit();
@@ -345,18 +336,20 @@ public class PreferenceUtil {
         }
     }
 
-    public String getClassReferenceName(Context context,int appName){
-        String className = null;
+    public NotificationInfo getNotificationInfo(Context context,String appNameAsString){
+        NotificationInfo info = null;
         try{
-            SharedPreferences pref = context.getSharedPreferences("CLASS_NAME", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences("NOTIFICATION_INFO", Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
-            if(map.containsKey(String.valueOf(appName)))
+            if(map.containsKey(appNameAsString))
             {
-                className = pref.getString(String.valueOf(appName),"");
+                Gson gson = new Gson();
+                String json = pref.getString(appNameAsString, "");
+                info = gson.fromJson(json, NotificationInfo.class);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return className;
+        return info;
     }
 }

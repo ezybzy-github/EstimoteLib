@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import com.estimotelib.FCMNotificationManager;
 import com.estimotelib.PreferenceUtil;
+import com.estimotelib.model.Notification;
+import com.estimotelib.model.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONObject;
@@ -12,10 +14,6 @@ import java.util.Map;
 public class CustomFirebaseMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FirebaseMessageService";
-
-    int AppName;
-
-    String reference;
 
     PreferenceUtil mPreferenceUtil;
 
@@ -37,13 +35,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         if (remoteMessage == null)
             return;
 
-        try {
-            AppName = mPreferenceUtil.getApplicationName(getApplicationContext());
-            reference = mPreferenceUtil.getClassReferenceName(getApplicationContext(),AppName);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
         // Check if message contains a data payload.
         Map<String, String> data = remoteMessage.getData();
         try {
@@ -62,13 +53,15 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         String url = data.optString("url");
         String title   = data.optString("title");
         String msg   = data.optString("message");
+        String appNameAsString = data.optString("app_name");
 
         Log.e(TAG,"Image: "+Image);
         Log.e(TAG,"url: "+url);
         Log.e(TAG,"title: "+title);
         Log.e(TAG,"message: "+msg);
 
-        showFCMNotification(getApplicationContext(),title,msg,Image,url,reference);
+        NotificationInfo info = mPreferenceUtil.getNotificationInfo(getApplicationContext(),appNameAsString);
+        showFCMNotification(getApplicationContext(),title,msg,Image,url,info.getClassReference());
     }
 
     private void showFCMNotification(Context ctx, String title, String message, String image, String url,

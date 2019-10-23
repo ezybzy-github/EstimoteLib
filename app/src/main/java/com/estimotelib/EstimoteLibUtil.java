@@ -10,6 +10,7 @@ import com.estimotelib.controller.PropertyController;
 import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.interfaces.INotificationHandler;
 import com.estimotelib.model.AddUserResponse;
+import com.estimotelib.model.NotificationInfo;
 import com.estimotelib.model.UpdateUser;
 import com.google.gson.Gson;
 import java.util.List;
@@ -30,30 +31,32 @@ public class EstimoteLibUtil {
     private PropertyController mPropertyController;
 
     public EstimoteLibUtil(String appId, String appToken, Context applicationContext) {
-
-//        Log.e(TAG,"ID: "+appId);
-//        Log.e(TAG,"TOKEN: "+appToken);
         cloudCredentials = new EstimoteCloudCredentials( appId, appToken);
 
         mPreferenceUtil = new PreferenceUtil();
         mPropertyController = new PropertyController(applicationContext);
     }
 
-    public void enableBeaconsNotification(Activity mContext, boolean flag, final INotificationHandler notificationHandler) {
+    public void enableBeaconsNotification(Activity mContext, boolean flag,final INotificationHandler notificationHandler,
+                                          String appName) {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
             mNm = new EstimoteNotificationManager(mContext, notificationHandler);
-            mNm.startMonitoring(mContext,flag);
+            mNm.startMonitoring(mContext,flag,appName);
         }
     }
 
-    public void setClassReferenceForNotification(Context ctx,Class reference,int AppName){
-        mPreferenceUtil.saveApplicationName(ctx,AppName);
-        mPreferenceUtil.SaveClassReferenceForNotification(ctx,AppName,reference);
+    public void setNotificationInfo(Context ctx,Class reference,int AppNameAsInteger,String appNameAsString){
+        NotificationInfo info = new NotificationInfo();
+        info.setAppNameAsInt(AppNameAsInteger);
+        info.setAppNameAsString(appNameAsString);
+        info.setClassReference(reference.getName());
+        mPreferenceUtil.SaveNotificationInfo(ctx,appNameAsString,info);
     }
 
-    public void startMonitoring(final Activity context, final boolean flag, final INotificationHandler notificationHandler) {
+    public void startMonitoring(final Activity context, final boolean flag,
+                                final INotificationHandler notificationHandler, final String AppName) {
 
         RequirementsWizardFactory
                 .createEstimoteRequirementsWizard()
@@ -62,7 +65,7 @@ public class EstimoteLibUtil {
                             @Override
                             public Unit invoke() {
                                 Log.d("app", "requirements fulfilled");
-                                enableBeaconsNotification(context,flag, notificationHandler);
+                                enableBeaconsNotification(context,flag, notificationHandler,AppName);
                                 return null;
                             }
                         },
@@ -84,11 +87,6 @@ public class EstimoteLibUtil {
     }
 
     public void sendAddUserRequest(final Context context, String userName, int appName){
-//        Log.e(TAG,"ADD_USER: ");
-//        Log.e(TAG,"mUserName: "+userName);
-//        Log.e(TAG,"getFCMToken(): "+mPreferenceUtil.getFCMToken(context));
-//        Log.e(TAG,"mAppName: "+appName);
-//        Log.e(TAG,"mIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.addUser(userName,1,mPreferenceUtil.getFCMToken(context),appName,
                 mPreferenceUtil.getIMEINumber(context),new ICallbackHandler<AddUserResponse>() {
@@ -110,9 +108,6 @@ public class EstimoteLibUtil {
     }
 
     private void SendTokenRefreshRequest(Context context,String userId) {
-//        Log.e(TAG,"TOKEN_UPDATE: ");
-//        Log.e(TAG,"fireBaseId: "+mPreferenceUtil.getFCMToken(context));
-//        Log.e(TAG,"getUserId: "+userId);
 
         mPropertyController.updateToken(userId, mPreferenceUtil.getFCMToken(context),
                 new ICallbackHandler<UpdateUser>() {
