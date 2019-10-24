@@ -42,7 +42,7 @@ public class EstimoteLibUtil {
 
         if(!mIsMonitoringOn) {
             mIsMonitoringOn = true;
-            mNm = new EstimoteNotificationManager(mContext, notificationHandler);
+            mNm = new EstimoteNotificationManager(mContext, notificationHandler,appName);
             mNm.startMonitoring(mContext,flag,appName);
         }
     }

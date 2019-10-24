@@ -46,10 +46,16 @@ public class EstimoteNotificationManager {
     private PreferenceUtil mPreferenceUtil;
     private NotificationInfo info = null;
 
-    public EstimoteNotificationManager(Context context, final INotificationHandler notificationHandler) {
+    public EstimoteNotificationManager(Context context, final INotificationHandler notificationHandler, String appName) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(context);
         this.mInotificatioHandler = notificationHandler;
+
+        mPreferenceUtil = new PreferenceUtil();
+        info = mPreferenceUtil.getNotificationInfo(context,appName);
+
+        sendPropertyEntryRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
+        sendExitPropertyRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -65,7 +71,6 @@ public class EstimoteNotificationManager {
             contentChannel.setSound(alarmSound, attributes);
             notificationManager.createNotificationChannel(contentChannel);
         }
-
 
         Intent webViewIntent = new Intent();
         webViewIntent.setComponent(new ComponentName(mContext, classReference));

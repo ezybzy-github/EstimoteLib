@@ -110,63 +110,36 @@ public class FCMNotificationManager {
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                 notificationManager.createNotificationChannel(mChannel);
             }
-            builder = new NotificationCompat.Builder(mContext,
-                    mContext.getResources().getString(R.string.default_notification_channel_id));
-
-            Intent intent = new Intent();
-            intent.setComponent(new ComponentName(mContext, className));
-            intent.putExtra("WEB_VIEW_URL", url);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-            pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-            builder.setContentTitle(title)                            // required
-                    .setSmallIcon(R.drawable.ic_lib_notifications)   // required
-                    .setContentText(message) // required
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                    .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())
-                    .setStyle(new NotificationCompat.BigPictureStyle()
-                    //This one is same as large icon but it wont show when its expanded that's why we again setting
-                    .bigLargeIcon(Picasso.with(mContext).load(imageUrl).get())
-                    //This is Big Banner image
-                    .bigPicture(Picasso.with(mContext).load(imageUrl).get())
-                    //When Notification expanded title and content text
-                    .setBigContentTitle(title)
-                    .setSummaryText(message));
         }
-        else {
-            builder = new NotificationCompat.Builder(mContext,
-                    mContext.getResources().getString(R.string.default_notification_channel_id));
 
-            Intent intent = new Intent();
-            intent.setComponent(new ComponentName(mContext, className));
+        builder = new NotificationCompat.Builder(mContext,
+                mContext.getResources().getString(R.string.default_notification_channel_id));
 
-            intent.putExtra("WEB_VIEW_URL", url);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(mContext, className));
+        intent.putExtra("WEB_VIEW_URL", url);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            builder.setContentTitle(title)                            // required
-                    .setSmallIcon(R.drawable.ic_lib_notifications)   // required
-                    .setContentText(message) // required
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())
-                    .setStyle(new NotificationCompat.BigPictureStyle()
-                            //This one is same as large icon but it wont show when its expanded that's why we again setting
-                            .bigLargeIcon(Picasso.with(mContext).load(imageUrl).get())
-                            //This is Big Banner image
-                            .bigPicture(Picasso.with(mContext).load(imageUrl).get())
-                            //When Notification expanded title and content text
-                            .setBigContentTitle(title)
-                            .setSummaryText(message));
-        }
+        builder.setContentTitle(title)                            // required
+                .setSmallIcon(R.drawable.ic_lib_notifications)   // required
+                .setContentText(message) // required
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setLargeIcon(Picasso.with(mContext).load(imageUrl).get())
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        //This one is same as large icon but it wont show when its expanded that's why we again setting
+                        .bigLargeIcon(Picasso.with(mContext).load(imageUrl).get())
+                        //This is Big Banner image
+                        .bigPicture(Picasso.with(mContext).load(imageUrl).get())
+                        //When Notification expanded title and content text
+                        .setBigContentTitle(title)
+                        .setSummaryText(message));
+
         Notification notification = builder.build();
         notificationManager.notify(generateRandomNotifyId(), notification);
     }
