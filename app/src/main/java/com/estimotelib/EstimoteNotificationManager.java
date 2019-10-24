@@ -54,8 +54,8 @@ public class EstimoteNotificationManager {
         mPreferenceUtil = new PreferenceUtil();
         info = mPreferenceUtil.getNotificationInfo(context,appName);
 
-        sendPropertyEntryRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
-        sendExitPropertyRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
+//        sendPropertyEntryRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
+//        sendExitPropertyRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -226,10 +226,10 @@ public class EstimoteNotificationManager {
     public void sendPropertyEntryRequest(final Context context, String url, final int appName){
         mPreferenceUtil = new PreferenceUtil();
 
-        Log.e(TAG,"PROPERTY_ENTRY getFCMToken: "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"PROPERTY_ENTRY url: "+url);
-        Log.e(TAG,"PROPERTY_ENTRY appName: "+appName);
-        Log.e(TAG,"PROPERTY_ENTRY getIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
+//        Log.e(TAG,"PROPERTY_ENTRY getFCMToken: "+mPreferenceUtil.getFCMToken(context));
+//        Log.e(TAG,"PROPERTY_ENTRY url: "+url);
+//        Log.e(TAG,"PROPERTY_ENTRY appName: "+appName);
+//        Log.e(TAG,"PROPERTY_ENTRY getIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
                 mPreferenceUtil.getIMEINumber(context), new ICallbackHandler<PropertyVisitResponse>() {
@@ -249,11 +249,11 @@ public class EstimoteNotificationManager {
     public void sendExitPropertyRequest(Context context, String url, int appName){
         mPreferenceUtil = new PreferenceUtil();
 
-        Log.e(TAG,"PROPERTY_EXIT getUserId: "+mPreferenceUtil.getUserId(context,String.valueOf(appName)));
-        Log.e(TAG,"PROPERTY_EXIT url: "+url);
-        Log.e(TAG,"PROPERTY_EXIT getFCMToken: "+mPreferenceUtil.getFCMToken(context));
-        Log.e(TAG,"PROPERTY_EXIT appName: "+appName);
-        Log.e(TAG,"PROPERTY_EXIT getIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
+//        Log.e(TAG,"PROPERTY_EXIT getUserId: "+mPreferenceUtil.getUserId(context,String.valueOf(appName)));
+//        Log.e(TAG,"PROPERTY_EXIT url: "+url);
+//        Log.e(TAG,"PROPERTY_EXIT getFCMToken: "+mPreferenceUtil.getFCMToken(context));
+//        Log.e(TAG,"PROPERTY_EXIT appName: "+appName);
+//        Log.e(TAG,"PROPERTY_EXIT getIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context,String.valueOf(appName)),
                 url,mPreferenceUtil.getFCMToken(context),
