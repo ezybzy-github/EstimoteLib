@@ -55,7 +55,7 @@ public class EstimoteNotificationManager {
         info = mPreferenceUtil.getNotificationInfo(context,appName);
 
         sendPropertyEntryRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
-//        sendExitPropertyRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
+        sendExitPropertyRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
@@ -248,6 +248,12 @@ public class EstimoteNotificationManager {
 
     public void sendExitPropertyRequest(Context context, String url, int appName){
         mPreferenceUtil = new PreferenceUtil();
+
+        Log.e(TAG,"PROPERTY_EXIT getUserId: "+mPreferenceUtil.getUserId(context));
+        Log.e(TAG,"PROPERTY_EXIT url: "+url);
+        Log.e(TAG,"PROPERTY_EXIT getFCMToken: "+mPreferenceUtil.getFCMToken(context));
+        Log.e(TAG,"PROPERTY_EXIT appName: "+appName);
+        Log.e(TAG,"PROPERTY_EXIT getIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context),url,mPreferenceUtil.getFCMToken(context),
                 appName, mPreferenceUtil.getIMEINumber(context),
