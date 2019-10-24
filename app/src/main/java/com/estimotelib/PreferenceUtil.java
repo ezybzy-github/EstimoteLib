@@ -286,19 +286,6 @@ public class PreferenceUtil {
         return sp.getString("TOKEN","");
     }
 
-    public void saveUserId(Context context, String UserId){
-        SharedPreferences sp = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
-        SharedPreferences.Editor spe = sp.edit();
-        spe.putString("UserId",UserId);
-        spe.apply();
-        spe.commit();
-    }
-
-    public String getUserId(Context context){
-        SharedPreferences sp = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
-        return sp.getString("UserId","");
-    }
-
     public void SaveNotificationInfo(Context context, String appNameAsString, NotificationInfo info){
         try{
             Gson gson = new Gson();

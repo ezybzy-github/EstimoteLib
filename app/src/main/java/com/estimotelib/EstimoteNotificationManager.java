@@ -223,7 +223,7 @@ public class EstimoteNotificationManager {
         sendExitPropertyRequest(context,value,info.getAppNameAsInt());
     }
 
-    public void sendPropertyEntryRequest(final Context context, String url, int appName){
+    public void sendPropertyEntryRequest(final Context context, String url, final int appName){
         mPreferenceUtil = new PreferenceUtil();
 
         Log.e(TAG,"PROPERTY_ENTRY getFCMToken: "+mPreferenceUtil.getFCMToken(context));
@@ -235,7 +235,7 @@ public class EstimoteNotificationManager {
                 mPreferenceUtil.getIMEINumber(context), new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
-                mPreferenceUtil.saveUserId(context, String.valueOf(response.getUserId()));
+                mPreferenceUtil.saveUserId(context, String.valueOf(response.getUserId()),String.valueOf(appName));
                 Log.e(TAG,"PROPERTY_ENTRY: "+new Gson().toJson(response));
             }
 
@@ -249,13 +249,14 @@ public class EstimoteNotificationManager {
     public void sendExitPropertyRequest(Context context, String url, int appName){
         mPreferenceUtil = new PreferenceUtil();
 
-        Log.e(TAG,"PROPERTY_EXIT getUserId: "+mPreferenceUtil.getUserId(context));
+        Log.e(TAG,"PROPERTY_EXIT getUserId: "+mPreferenceUtil.getUserId(context,String.valueOf(appName)));
         Log.e(TAG,"PROPERTY_EXIT url: "+url);
         Log.e(TAG,"PROPERTY_EXIT getFCMToken: "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"PROPERTY_EXIT appName: "+appName);
         Log.e(TAG,"PROPERTY_EXIT getIMEINumber: "+mPreferenceUtil.getIMEINumber(context));
 
-        mPropertyController.exitProperty(mPreferenceUtil.getUserId(context),url,mPreferenceUtil.getFCMToken(context),
+        mPropertyController.exitProperty(mPreferenceUtil.getUserId(context,String.valueOf(appName)),
+                url,mPreferenceUtil.getFCMToken(context),
                 appName, mPreferenceUtil.getIMEINumber(context),
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
