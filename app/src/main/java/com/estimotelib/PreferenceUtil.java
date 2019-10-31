@@ -12,10 +12,6 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class PreferenceUtil implements Constant{
-
-    private String uniqueID = null;
-
-
     public void PreferenceUtil(){
 
     }
@@ -257,19 +253,33 @@ public class PreferenceUtil implements Constant{
         return context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public synchronized String getUniqueIDid(Context context) {
-        if (uniqueID == null) {
-            SharedPreferences sharedPrefs = context.getSharedPreferences(
-                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
-            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = sharedPrefs.edit();
-                editor.putString(PREF_UNIQUE_ID, uniqueID);
-                editor.apply();
-            }
+    public void saveUniqueID(Context context,String uniqueID,String appNameAsInt){
+        SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+        HashMap<String, String> map = getMap(pref);
+
+        if(!map.containsKey(appNameAsInt))
+        {
+            map.put(appNameAsInt, uniqueID);
         }
-        return uniqueID;
+
+        SharedPreferences.Editor editor= pref.edit();
+
+        for (String s : map.keySet()) {
+            editor.putString(s, map.get(s));
+        }
+
+        editor.apply();
+    }
+    public synchronized String getUniqueID(Context context,String appNameAsInt) {
+        String uniqueId = null;
+        SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+        HashMap<String, String> map = getMap(pref);
+        if(map.containsKey(appNameAsInt))
+        {
+            uniqueId = pref.getString(appNameAsInt,"");
+        }
+
+        return uniqueId;
     }
 
     public void saveFCMToken(Context context, String token){
@@ -349,7 +359,7 @@ public class PreferenceUtil implements Constant{
     }
 
     public String getIfAppLaunchFirst(Context context,String appName){
-        String flag = "no";
+        String flag =   NO;
         try {
             SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);

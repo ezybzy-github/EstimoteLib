@@ -227,7 +227,7 @@ public class EstimoteNotificationManager {
         mPreferenceUtil = new PreferenceUtil();
 
         mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
-                mPreferenceUtil.getUniqueIDid(context), new ICallbackHandler<PropertyVisitResponse>() {
+                mPreferenceUtil.getUniqueID(context,String.valueOf(appName)), new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
                 mPreferenceUtil.saveUserId(context, String.valueOf(response.getUserId()),String.valueOf(appName));
@@ -246,7 +246,7 @@ public class EstimoteNotificationManager {
 
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context,String.valueOf(appName)),
                 url,mPreferenceUtil.getFCMToken(context),
-                appName, mPreferenceUtil.getUniqueIDid(context),
+                appName, mPreferenceUtil.getUniqueID(context,String.valueOf(appName)),
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
             public void response(PropertyExitResponse response) {
