@@ -28,7 +28,7 @@ public class PropertyModule extends BaseModule {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
         Call<ResponseBody> dataCall = mEstimoteLibApi.visitProperty(fcmToken,propertyUrl,appName,imeiNumber);
-        dataCall.enqueue(makeNetworkCall("visitProperty"));
+        dataCall.enqueue(makeNetworkCall());
     }
 
     public void exitProperty(String userId,String propertyUrl,String firebaseId,int appName,String deviceIMEI,
@@ -36,7 +36,7 @@ public class PropertyModule extends BaseModule {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
         Call<ResponseBody> dataCall = mEstimoteLibApi.exitProperty(userId,firebaseId,appName,propertyUrl,deviceIMEI);
-        dataCall.enqueue(makeNetworkCall("exitProperty"));
+        dataCall.enqueue(makeNetworkCall());
     }
 
     public void addUser(String userName,int deviceType,String firebaseId,int appName,String deviceIMEI,
@@ -44,7 +44,7 @@ public class PropertyModule extends BaseModule {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
         Call<ResponseBody> dataCall = mEstimoteLibApi.addUser(userName,deviceType,firebaseId,appName,deviceIMEI);
-        dataCall.enqueue(makeNetworkCall("addUser"));
+        dataCall.enqueue(makeNetworkCall());
     }
 
     public void updateToken(String userId,String firebaseId,
@@ -52,6 +52,6 @@ public class PropertyModule extends BaseModule {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
         Call<ResponseBody> dataCall = mEstimoteLibApi.updateToken(userId,firebaseId);
-        dataCall.enqueue(makeNetworkCall("updateToken"));
+        dataCall.enqueue(makeNetworkCall());
     }
 }

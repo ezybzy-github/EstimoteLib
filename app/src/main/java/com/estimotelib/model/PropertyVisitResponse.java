@@ -60,5 +60,4 @@ public class PropertyVisitResponse {
     public void setId(Integer id) {
         this.id = id;
     }
-
 }

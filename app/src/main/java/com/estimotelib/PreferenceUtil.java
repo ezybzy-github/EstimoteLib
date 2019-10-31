@@ -2,23 +2,14 @@ package com.estimotelib;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.estimotelib.model.NotificationInfo;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-
-import static com.estimotelib.Constant.ENTERED_BEACON;
 
 public class PreferenceUtil implements Constant{
 
@@ -105,7 +96,7 @@ public class PreferenceUtil implements Constant{
             HashMap<String, String> map= getMap(pref);
             String date = map.get(value);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
 
             Date currentDate = new Date();
 
@@ -132,7 +123,7 @@ public class PreferenceUtil implements Constant{
 
     public String getCurrentDateTime()
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
         Calendar calender = Calendar.getInstance(Locale.getDefault());
         Date currentTime = calender.getTime();
         String formattedDate = sdf.format(currentTime);
@@ -175,7 +166,7 @@ public class PreferenceUtil implements Constant{
 
             if(map.containsKey(beaconId))
             {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
                 Date beaconNotificationTime = sdf.parse(map.get(beaconId));
                 Date now = Calendar.getInstance().getTime(); // Get time now
                 long differenceInMillis = now.getTime() - beaconNotificationTime.getTime();
@@ -216,7 +207,7 @@ public class PreferenceUtil implements Constant{
 
     public String getTime()
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
         Calendar calender = Calendar.getInstance(Locale.getDefault());
         Date currentTime = calender.getTime();
         String formattedTime = sdf.format(currentTime);
@@ -284,14 +275,14 @@ public class PreferenceUtil implements Constant{
     public void saveFCMToken(Context context, String token){
         SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
-        spe.putString("TOKEN",token);
+        spe.putString(TOKEN,token);
         spe.apply();
         spe.commit();
     }
 
     public String getFCMToken(Context context){
         SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, Context.MODE_PRIVATE);
-        return sp.getString("TOKEN","");
+        return sp.getString(TOKEN,"");
     }
 
     public void SaveNotificationInfo(Context context, String appNameAsString, NotificationInfo info){
@@ -364,7 +355,7 @@ public class PreferenceUtil implements Constant{
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appName))
             {
-                flag = pref.getString(appName,"no");
+                flag = pref.getString(appName,NO);
             }
 
         }catch (Exception e){
@@ -403,7 +394,7 @@ public class PreferenceUtil implements Constant{
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appName))
             {
-                id = pref.getString(appName,"no");
+                id = pref.getString(appName,NO);
             }
 
         }catch (Exception e){

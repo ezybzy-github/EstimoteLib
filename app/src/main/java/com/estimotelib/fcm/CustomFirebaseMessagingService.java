@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import com.estimotelib.FCMNotificationManager;
 import com.estimotelib.PreferenceUtil;
-import com.estimotelib.model.Notification;
 import com.estimotelib.model.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -54,11 +53,6 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService
         String title   = data.optString("title");
         String msg   = data.optString("message");
         String appNameAsString = data.optString("app_name");
-
-        Log.e(TAG,"Image: "+Image);
-        Log.e(TAG,"url: "+url);
-        Log.e(TAG,"title: "+title);
-        Log.e(TAG,"message: "+msg);
 
         NotificationInfo info = mPreferenceUtil.getNotificationInfo(getApplicationContext(),appNameAsString);
         showFCMNotification(getApplicationContext(),title,msg,Image,url,info.getClassReference());

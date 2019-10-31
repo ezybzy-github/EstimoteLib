@@ -63,7 +63,7 @@ public abstract class BaseModule implements API {
         }
     }
 
-    protected Callback makeNetworkCall(final String apiName) {
+    protected Callback makeNetworkCall() {
         Callback callback = new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -75,7 +75,7 @@ public abstract class BaseModule implements API {
                     }
                 } else {
                     onFailureResponse(response.message());
-                    Log.e("error message", apiName+": "+response.message());
+                    Log.e("error message", response.message());
                 }
             }
 
