@@ -16,8 +16,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
-public class PreferenceUtil {
+import static com.estimotelib.Constant.ENTERED_BEACON;
+
+public class PreferenceUtil implements Constant{
+
+    private String uniqueID = null;
+
 
     public void PreferenceUtil(){
 
@@ -34,7 +40,7 @@ public class PreferenceUtil {
     {
         try
         {
-            SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS", Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             map.put(url, getCurrentDateTime());
 
@@ -58,7 +64,7 @@ public class PreferenceUtil {
     public boolean matchKeyFromMuteMap(Context context, String value)
     {
         boolean urlMatch = false;
-        SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS", Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         if(map.containsKey(value))
@@ -70,7 +76,7 @@ public class PreferenceUtil {
 
     //Delete from preference
     public void deleteFromMutedUrl(Context context, String value){
-        SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS", Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         SharedPreferences.Editor editor= pref.edit();
@@ -95,7 +101,7 @@ public class PreferenceUtil {
         boolean dateMatch = false;
 
         try {
-            SharedPreferences pref= context.getSharedPreferences("STORED_MUTED_URLS", Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
             HashMap<String, String> map= getMap(pref);
             String date = map.get(value);
 
@@ -139,7 +145,7 @@ public class PreferenceUtil {
     {
         try
         {
-            SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON", Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(!map.containsKey(beaconId))
             {
@@ -164,7 +170,7 @@ public class PreferenceUtil {
 
     public boolean isBeaconNotificationReceivedInTwelveHours(Context context, final String beaconId) {
         try {
-            SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON", Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, Context.MODE_PRIVATE);
             HashMap<String, String> map= getMap(pref);
 
             if(map.containsKey(beaconId))
@@ -189,7 +195,7 @@ public class PreferenceUtil {
     }
 
     public void deleteFromVisitedBeacon(Context context, String value){
-        SharedPreferences pref= context.getSharedPreferences("VISITED_BEACON", Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         SharedPreferences.Editor editor= pref.edit();
@@ -219,7 +225,7 @@ public class PreferenceUtil {
     }
 
     public void saveBeaconEnterDetail(Context context, String deviceId){
-        SharedPreferences pref= context.getSharedPreferences("ENTERED_BEACON", Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(ENTERED_BEACON, Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         if(!map.containsKey(deviceId))
@@ -238,7 +244,7 @@ public class PreferenceUtil {
     }
 
     public void saveBeaconExitDetail(Context context, String deviceId){
-        SharedPreferences pref= context.getSharedPreferences("EXIT_BEACON", Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(EXIT_BEACON, Context.MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         if(!map.containsKey(deviceId))
@@ -260,21 +266,23 @@ public class PreferenceUtil {
         return context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public void SaveIMEINumber(Context context,String imeinumber){
-        SharedPreferences sp = context.getSharedPreferences("IMEI_NUMBER", Context.MODE_PRIVATE);
-        SharedPreferences.Editor spe = sp.edit();
-        spe.putString("IMEINumber",imeinumber);
-        spe.apply();
-        spe.commit();
-    }
-
-    public String getIMEINumber(Context context){
-        SharedPreferences sp = context.getSharedPreferences("IMEI_NUMBER", Context.MODE_PRIVATE);
-        return sp.getString("IMEINumber","");
+    public synchronized String getUniqueIDid(Context context) {
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.apply();
+            }
+        }
+        return uniqueID;
     }
 
     public void saveFCMToken(Context context, String token){
-        SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN", Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, Context.MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString("TOKEN",token);
         spe.apply();
@@ -282,7 +290,7 @@ public class PreferenceUtil {
     }
 
     public String getFCMToken(Context context){
-        SharedPreferences sp = context.getSharedPreferences("FCM_TOKEN", Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, Context.MODE_PRIVATE);
         return sp.getString("TOKEN","");
     }
 
@@ -291,7 +299,7 @@ public class PreferenceUtil {
             Gson gson = new Gson();
             String json = gson.toJson(info);
 
-            SharedPreferences pref = context.getSharedPreferences("NOTIFICATION_INFO", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(NOTIFICATION_INFO, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(!map.containsKey(appNameAsString))
             {
@@ -313,7 +321,7 @@ public class PreferenceUtil {
     public NotificationInfo getNotificationInfo(Context context,String appNameAsString){
         NotificationInfo info = null;
         try{
-            SharedPreferences pref = context.getSharedPreferences("NOTIFICATION_INFO", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(NOTIFICATION_INFO, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appNameAsString))
             {
@@ -329,7 +337,7 @@ public class PreferenceUtil {
 
     public void isAppLunchFirstTime(Context context,String flag ,String appName){
         try {
-            SharedPreferences pref = context.getSharedPreferences("APP_INSTALLED", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
 
             if(!map.containsKey(appName))
@@ -352,7 +360,7 @@ public class PreferenceUtil {
     public String getIfAppLaunchFirst(Context context,String appName){
         String flag = "no";
         try {
-            SharedPreferences pref = context.getSharedPreferences("APP_INSTALLED", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appName))
             {
@@ -368,7 +376,7 @@ public class PreferenceUtil {
 
     public void saveUserId(Context context,String id ,String appName){
         try {
-            SharedPreferences pref = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(USER_ID, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
 
             if(!map.containsKey(appName))
@@ -391,7 +399,7 @@ public class PreferenceUtil {
     public String getUserId(Context context,String appName){
         String id = "";
         try {
-            SharedPreferences pref = context.getSharedPreferences("USER_ID", Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(USER_ID, Context.MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appName))
             {

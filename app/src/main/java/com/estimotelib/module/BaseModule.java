@@ -2,23 +2,19 @@ package com.estimotelib.module;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.estimotelib.api.API;
 import com.estimotelib.api.EstimoteLibApi;
 import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.serverutility.NetworkManager;
 import com.google.gson.Gson;
-
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
