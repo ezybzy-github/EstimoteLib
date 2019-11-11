@@ -287,7 +287,6 @@ public class PreferenceUtil implements Constant{
         SharedPreferences.Editor spe = sp.edit();
         spe.putString(TOKEN,token);
         spe.apply();
-        spe.commit();
     }
 
     public String getFCMToken(Context context){

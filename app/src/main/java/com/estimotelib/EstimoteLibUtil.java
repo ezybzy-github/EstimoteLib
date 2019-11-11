@@ -88,6 +88,11 @@ public class EstimoteLibUtil {
 
     public void sendAddUserRequest(final Context context, String userName, final int appName){
 
+        Log.e(TAG,"userName: "+userName);
+        Log.e(TAG,"getFCMToken: "+mPreferenceUtil.getFCMToken(context));
+        Log.e(TAG,"appName: "+appName);
+        Log.e(TAG,"getUniqueID: "+mPreferenceUtil.getUniqueID(context,String.valueOf(appName)));
+
         mPropertyController.addUser(userName,1,mPreferenceUtil.getFCMToken(context),appName,
                 mPreferenceUtil.getUniqueID(context,String.valueOf(appName)),new ICallbackHandler<AddUserResponse>() {
                     @Override
