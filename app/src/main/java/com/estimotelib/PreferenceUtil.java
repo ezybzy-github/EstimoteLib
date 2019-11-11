@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PreferenceUtil implements Constant{
     public void PreferenceUtil(){
 
@@ -27,7 +29,7 @@ public class PreferenceUtil implements Constant{
     {
         try
         {
-            SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             map.put(url, getCurrentDateTime());
 
@@ -51,7 +53,7 @@ public class PreferenceUtil implements Constant{
     public boolean matchKeyFromMuteMap(Context context, String value)
     {
         boolean urlMatch = false;
-        SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         if(map.containsKey(value))
@@ -63,7 +65,7 @@ public class PreferenceUtil implements Constant{
 
     //Delete from preference
     public void deleteFromMutedUrl(Context context, String value){
-        SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         SharedPreferences.Editor editor= pref.edit();
@@ -88,7 +90,7 @@ public class PreferenceUtil implements Constant{
         boolean dateMatch = false;
 
         try {
-            SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(STORED_MUTED_URLS, MODE_PRIVATE);
             HashMap<String, String> map= getMap(pref);
             String date = map.get(value);
 
@@ -132,7 +134,7 @@ public class PreferenceUtil implements Constant{
     {
         try
         {
-            SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(!map.containsKey(beaconId))
             {
@@ -157,7 +159,7 @@ public class PreferenceUtil implements Constant{
 
     public boolean isBeaconNotificationReceivedInTwelveHours(Context context, final String beaconId) {
         try {
-            SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, Context.MODE_PRIVATE);
+            SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, MODE_PRIVATE);
             HashMap<String, String> map= getMap(pref);
 
             if(map.containsKey(beaconId))
@@ -182,7 +184,7 @@ public class PreferenceUtil implements Constant{
     }
 
     public void deleteFromVisitedBeacon(Context context, String value){
-        SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(VISITED_BEACON, MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         SharedPreferences.Editor editor= pref.edit();
@@ -212,7 +214,7 @@ public class PreferenceUtil implements Constant{
     }
 
     public void saveBeaconEnterDetail(Context context, String deviceId){
-        SharedPreferences pref= context.getSharedPreferences(ENTERED_BEACON, Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(ENTERED_BEACON, MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         if(!map.containsKey(deviceId))
@@ -231,7 +233,7 @@ public class PreferenceUtil implements Constant{
     }
 
     public void saveBeaconExitDetail(Context context, String deviceId){
-        SharedPreferences pref= context.getSharedPreferences(EXIT_BEACON, Context.MODE_PRIVATE);
+        SharedPreferences pref= context.getSharedPreferences(EXIT_BEACON, MODE_PRIVATE);
         HashMap<String, String> map= getMap(pref);
 
         if(!map.containsKey(deviceId))
@@ -250,11 +252,11 @@ public class PreferenceUtil implements Constant{
     }
 
     public SharedPreferences getPreference(Context context, String name){
-        return context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        return context.getSharedPreferences(name, MODE_PRIVATE);
     }
 
     public void saveUniqueID(Context context,String uniqueID,String appNameAsInt){
-        SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, MODE_PRIVATE);
         HashMap<String, String> map = getMap(pref);
 
         if(!map.containsKey(appNameAsInt))
@@ -272,7 +274,7 @@ public class PreferenceUtil implements Constant{
     }
     public synchronized String getUniqueID(Context context,String appNameAsInt) {
         String uniqueId = null;
-        SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, MODE_PRIVATE);
         HashMap<String, String> map = getMap(pref);
         if(map.containsKey(appNameAsInt))
         {
@@ -283,14 +285,14 @@ public class PreferenceUtil implements Constant{
     }
 
     public void saveFCMToken(Context context, String token){
-        SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, MODE_PRIVATE);
         SharedPreferences.Editor spe = sp.edit();
         spe.putString(TOKEN,token);
         spe.apply();
     }
 
     public String getFCMToken(Context context){
-        SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(FCM_TOKEN, MODE_PRIVATE);
         return sp.getString(TOKEN,"");
     }
 
@@ -299,7 +301,7 @@ public class PreferenceUtil implements Constant{
             Gson gson = new Gson();
             String json = gson.toJson(info);
 
-            SharedPreferences pref = context.getSharedPreferences(NOTIFICATION_INFO, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(NOTIFICATION_INFO, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(!map.containsKey(appNameAsString))
             {
@@ -321,7 +323,7 @@ public class PreferenceUtil implements Constant{
     public NotificationInfo getNotificationInfo(Context context,String appNameAsString){
         NotificationInfo info = null;
         try{
-            SharedPreferences pref = context.getSharedPreferences(NOTIFICATION_INFO, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(NOTIFICATION_INFO, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appNameAsString))
             {
@@ -337,7 +339,7 @@ public class PreferenceUtil implements Constant{
 
     public void isAppLunchFirstTime(Context context,String flag ,String appName){
         try {
-            SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
 
             if(!map.containsKey(appName))
@@ -360,7 +362,7 @@ public class PreferenceUtil implements Constant{
     public String getIfAppLaunchFirst(Context context,String appName){
         String flag =   NO;
         try {
-            SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(APP_INSTALLED, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appName))
             {
@@ -376,7 +378,7 @@ public class PreferenceUtil implements Constant{
 
     public void saveUserId(Context context,String id ,String appName){
         try {
-            SharedPreferences pref = context.getSharedPreferences(USER_ID, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(USER_ID, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
 
             if(!map.containsKey(appName))
@@ -399,11 +401,11 @@ public class PreferenceUtil implements Constant{
     public String getUserId(Context context,String appName){
         String id = "";
         try {
-            SharedPreferences pref = context.getSharedPreferences(USER_ID, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences(USER_ID, MODE_PRIVATE);
             HashMap<String, String> map = getMap(pref);
             if(map.containsKey(appName))
             {
-                id = pref.getString(appName,NO);
+                id = pref.getString(appName,"");
             }
 
         }catch (Exception e){
@@ -411,5 +413,18 @@ public class PreferenceUtil implements Constant{
         }
 
         return id;
+    }
+
+    public void saveSingleAppNameAsInteger(Context context,int appNameAsInteger) {
+        SharedPreferences sp = context.getSharedPreferences(APP_NAME_AS_INTEGER, MODE_PRIVATE);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(SINGLE_APP_NAME, appNameAsInteger);
+        spe.apply();
+    }
+
+    public int getSingleAppNameAsInteger(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(APP_NAME_AS_INTEGER, MODE_PRIVATE);
+        int i = sp.getInt(SINGLE_APP_NAME, 0);
+        return i;
     }
 }

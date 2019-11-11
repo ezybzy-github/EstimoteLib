@@ -53,6 +53,7 @@ public class EstimoteLibUtil {
         info.setAppNameAsString(appNameAsString);
         info.setClassReference(reference.getName());
         mPreferenceUtil.SaveNotificationInfo(ctx,appNameAsString,info);
+        mPreferenceUtil.saveSingleAppNameAsInteger(ctx,AppNameAsInteger);
     }
 
     public void startMonitoring(final Activity context, final boolean flag,
@@ -107,22 +108,6 @@ public class EstimoteLibUtil {
                     @Override
                     public void isError(String errorMsg) {
                         Log.e(TAG,"ADD_USER ERROR: "+errorMsg);
-                    }
-                });
-    }
-
-    public void SendTokenRefreshRequest(Context context,String userId) {
-
-        mPropertyController.updateToken(userId, mPreferenceUtil.getFCMToken(context),
-                new ICallbackHandler<UpdateUser>() {
-                    @Override
-                    public void response(UpdateUser response) {
-                        Log.e(TAG,"TOKEN_UPDATE: "+new Gson().toJson(response));
-                    }
-
-                    @Override
-                    public void isError(String errorMsg) {
-                        Log.e(TAG,"TOKEN_UPDATE ERROR: "+errorMsg);
                     }
                 });
     }

@@ -10,6 +10,8 @@ public interface Constant {
     String APP_INSTALLED = "APP_INSTALLED";
     String USER_ID = "USER_ID";
     String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    String APP_NAME_AS_INTEGER = "APP_NAME_AS_INTEGER";
+    String SINGLE_APP_NAME = "SINGLE_APP_NAME";
 
     String TOKEN = "TOKEN";
     String DATE_FORMAT_WITH_TIME = "dd/MM/yyyy HH:mm:ss";
