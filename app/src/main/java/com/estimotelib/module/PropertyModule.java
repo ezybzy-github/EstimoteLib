@@ -1,6 +1,8 @@
 package com.estimotelib.module;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.estimotelib.interfaces.ICallbackHandler;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -15,6 +17,7 @@ public class PropertyModule extends BaseModule {
 
     @Override
     protected void onSuccessResponse(String response) {
+        Log.e("Response in String",""+response);
         parseResponseRetrofit(response, mClassRef, mICallbackHandler);
     }
 
