@@ -17,7 +17,6 @@ public class PropertyModule extends BaseModule {
 
     @Override
     protected void onSuccessResponse(String response) {
-        Log.e("Response in String",""+response);
         parseResponseRetrofit(response, mClassRef, mICallbackHandler);
     }
 
