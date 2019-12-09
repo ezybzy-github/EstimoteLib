@@ -46,6 +46,8 @@ public class EstimoteNotificationManager {
     private PreferenceUtil mPreferenceUtil;
     private NotificationInfo info = null;
 
+    private static boolean isDialogOrNotificationShow = false;
+
     public EstimoteNotificationManager(Context context, final INotificationHandler notificationHandler, String appName) {
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mPropertyController = new PropertyController(context);
@@ -148,6 +150,7 @@ public class EstimoteNotificationManager {
             }
 
             if(!isPropertyVisited) {
+                isDialogOrNotificationShow = true;
                 if(!isFirstTime){
                     isFirstTime = true;
                     showNotificationDialog(mContext,key,value,appName,info.getClassReference());
@@ -220,7 +223,10 @@ public class EstimoteNotificationManager {
         Map.Entry<String, String> entry = attachments.entrySet().iterator().next();
         String value = entry.getValue();
 
-        sendExitPropertyRequest(context,value,info.getAppNameAsInt());
+        if(isDialogOrNotificationShow){
+            isDialogOrNotificationShow = false;
+            sendExitPropertyRequest(context,value,info.getAppNameAsInt());
+        }
     }
 
     public void sendPropertyEntryRequest(final Context context, String url, final int appName){
