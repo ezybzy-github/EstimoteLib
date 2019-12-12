@@ -25,11 +25,11 @@ public class PropertyModule extends BaseModule {
         mICallbackHandler.isError(errorMsg);
     }
 
-    public void visitProperty(String fcmToken,String propertyUrl,int appName,String imeiNumber,final Class classRef,
-                       final ICallbackHandler iCallbackHandler) {
+    public void visitProperty(String fcmToken, String propertyUrl, int appName, String imeiNumber, String deviceId,
+                              final Class classRef,final ICallbackHandler iCallbackHandler) {
         mICallbackHandler = iCallbackHandler;
         mClassRef = classRef;
-        Call<ResponseBody> dataCall = mEstimoteLibApi.visitProperty(fcmToken,propertyUrl,appName,imeiNumber);
+        Call<ResponseBody> dataCall = mEstimoteLibApi.visitProperty(fcmToken,propertyUrl,appName,imeiNumber,deviceId);
         dataCall.enqueue(makeNetworkCall());
     }
 

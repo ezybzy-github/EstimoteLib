@@ -17,7 +17,8 @@ public interface EstimoteLibApi {
     Call<ResponseBody> visitProperty(@Field("device_notification_id") String deviceNotificationId,
                                      @Field("property_url") String url,
                                      @Field("app_name") int appName,
-                                     @Field("device_imei") String deviceImei);
+                                     @Field("device_imei") String deviceImei,
+                                     @Field("u_id") String deviceId);
 
     @FormUrlEncoded
     @POST(EXIT_PROPERTY)

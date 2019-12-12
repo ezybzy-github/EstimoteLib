@@ -18,9 +18,9 @@ public class PropertyController extends BaseController {
         }
     }
 
-    public void visitProperty(String fcmToken,String propertyUrl,int appName,String imeiNumber,
-                              final ICallbackHandler iCallbackHandler) {
-        mPropertyModule.visitProperty(fcmToken,propertyUrl,appName,imeiNumber,PropertyVisitResponse.class,
+    public void visitProperty(String fcmToken, String propertyUrl, int appName, String imeiNumber,
+                              String deviceId, final ICallbackHandler iCallbackHandler) {
+        mPropertyModule.visitProperty(fcmToken,propertyUrl,appName,imeiNumber,deviceId,PropertyVisitResponse.class,
                 new ICallbackHandler<PropertyVisitResponse>() {
                     @Override
                     public void response(PropertyVisitResponse responseContest) {

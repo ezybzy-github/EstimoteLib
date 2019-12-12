@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.UUID;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -272,7 +271,7 @@ public class PreferenceUtil implements Constant{
 
         editor.apply();
     }
-    public synchronized String getUniqueID(Context context,String appNameAsInt) {
+    public synchronized String getUniqueID(Context context, String appNameAsInt) {
         String uniqueId = null;
         SharedPreferences pref = context.getSharedPreferences(PREF_UNIQUE_ID, MODE_PRIVATE);
         HashMap<String, String> map = getMap(pref);

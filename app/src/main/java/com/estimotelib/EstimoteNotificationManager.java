@@ -162,7 +162,7 @@ public class EstimoteNotificationManager {
                 }
             }
 
-            sendPropertyEntryRequest(mContext,value,info.getAppNameAsInt());
+            sendPropertyEntryRequest(mContext,value,info.getAppNameAsInt(),proximityZoneContext.getDeviceId());
         }
     }
 
@@ -207,6 +207,7 @@ public class EstimoteNotificationManager {
                     public Unit invoke(ProximityZoneContext proximityContext) {
                         mPreferenceUtil.saveBeaconExitDetail(mContext,proximityContext.getDeviceId());
                         readAttachment(mContext,proximityContext,appName);
+                        proximityContext.getTag();
                         return null;
                     }
                 })
@@ -229,11 +230,12 @@ public class EstimoteNotificationManager {
         }
     }
 
-    public void sendPropertyEntryRequest(final Context context, String url, final int appName){
+    public void sendPropertyEntryRequest(final Context context, String url, final int appName,String deviceId){
         mPreferenceUtil = new PreferenceUtil();
 
         mPropertyController.visitProperty(mPreferenceUtil.getFCMToken(context), url, appName,
-                mPreferenceUtil.getUniqueID(context,String.valueOf(appName)), new ICallbackHandler<PropertyVisitResponse>() {
+                mPreferenceUtil.getUniqueID(context,String.valueOf(appName)),deviceId,
+                new ICallbackHandler<PropertyVisitResponse>() {
             @Override
             public void response(PropertyVisitResponse response) {
                 mPreferenceUtil.saveUserId(context, String.valueOf(response.getUserId()),String.valueOf(appName));
@@ -252,7 +254,7 @@ public class EstimoteNotificationManager {
 
         mPropertyController.exitProperty(mPreferenceUtil.getUserId(context,String.valueOf(appName)),
                 url,mPreferenceUtil.getFCMToken(context),
-                appName, mPreferenceUtil.getUniqueID(context,String.valueOf(appName)),
+                appName, mPreferenceUtil.getUniqueID(context, String.valueOf(appName)),
                 new ICallbackHandler<PropertyExitResponse>() {
             @Override
             public void response(PropertyExitResponse response) {

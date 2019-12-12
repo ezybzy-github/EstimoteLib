@@ -11,7 +11,6 @@ import com.estimotelib.interfaces.ICallbackHandler;
 import com.estimotelib.interfaces.INotificationHandler;
 import com.estimotelib.model.AddUserResponse;
 import com.estimotelib.model.NotificationInfo;
-import com.estimotelib.model.UpdateUser;
 import com.google.gson.Gson;
 import java.util.List;
 import kotlin.Unit;
@@ -92,10 +91,10 @@ public class EstimoteLibUtil {
         Log.e(TAG,"userName: "+userName);
         Log.e(TAG,"getFCMToken: "+mPreferenceUtil.getFCMToken(context));
         Log.e(TAG,"appName: "+appName);
-        Log.e(TAG,"getUniqueID: "+mPreferenceUtil.getUniqueID(context,String.valueOf(appName)));
+        Log.e(TAG,"getUniqueID: "+mPreferenceUtil.getUniqueID(context, String.valueOf(appName)));
 
         mPropertyController.addUser(userName,1,mPreferenceUtil.getFCMToken(context),appName,
-                mPreferenceUtil.getUniqueID(context,String.valueOf(appName)),new ICallbackHandler<AddUserResponse>() {
+                mPreferenceUtil.getUniqueID(context, String.valueOf(appName)),new ICallbackHandler<AddUserResponse>() {
                     @Override
                     public void response(AddUserResponse response) {
                         Log.e(TAG,"ADD_USER: "+new Gson().toJson(response));
