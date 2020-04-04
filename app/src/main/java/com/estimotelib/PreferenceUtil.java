@@ -17,11 +17,11 @@ public class PreferenceUtil implements Constant{
 
     }
 
-    public HashMap<String, String> getMap(SharedPreferences pref)
-    {
-        HashMap<String, String> map= (HashMap<String, String>) pref.getAll();
-        return map;
-    }
+        public HashMap<String, String> getMap(SharedPreferences pref)
+        {
+            HashMap<String, String> map= (HashMap<String, String>) pref.getAll();
+            return map;
+        }
 
     //user mute any notification then store here
     public void storeMutedUrl(Context context, String url)
