@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class AddUserResponse {
-
     @SerializedName("user_name")
     @Expose
     private Object userName;

@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class PropertyVisitResponse {
-
     @SerializedName("user_id")
     @Expose
     private Integer userId;
