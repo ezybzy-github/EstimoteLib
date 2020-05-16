@@ -55,9 +55,6 @@ public class EstimoteNotificationManager {
 
         mPreferenceUtil = new PreferenceUtil();
         info = mPreferenceUtil.getNotificationInfo(context,appName);
-
-//        sendPropertyEntryRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
-//        sendExitPropertyRequest(context,"https://ankita_developer.com/",info.getAppNameAsInt());
     }
 
     public NotificationCompat.Builder buildNotification(Activity mContext, final String title, final String value,
